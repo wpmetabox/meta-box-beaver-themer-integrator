@@ -41,10 +41,9 @@ class MB_Beaver_Themer_Integrator {
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
 				'options' => $this->get_post_fields(),
 			),
-			'size'  => array(
-				'type'    => 'select',
-				'label'   => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_image_sizes(),
+			'image_size'  => array(
+				'type'  => 'photo-sizes',
+				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
 			),
 		) );
 	}
@@ -68,7 +67,7 @@ class MB_Beaver_Themer_Integrator {
 			case 'plupload_image':
 				return get_post_meta( get_the_ID(), $field_id, false );
 			case 'single_image':
-				$args['size'] = $settings->size;
+				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args );
 				$value['id']  = $value['ID'];
 				return $value;
@@ -103,20 +102,5 @@ class MB_Beaver_Themer_Integrator {
 		}
 
 		return $sources;
-	}
-
-	/**
-	 * Get list of image sizes.
-	 *
-	 * @return array
-	 */
-	public function get_image_sizes() {
-		$sizes         = get_intermediate_image_sizes();
-		$sizes         = array_combine( $sizes, $sizes );
-		$sizes['full'] = __( 'Full', 'meta-box-beaver-themer-integrator' );
-		foreach ( $sizes as &$label ) {
-			$label = ucwords( str_replace( array( '_', '-' ), ' ', $label ) );
-		}
-		return $sizes;
 	}
 }
