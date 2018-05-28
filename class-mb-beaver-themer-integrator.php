@@ -54,7 +54,7 @@ class MB_Beaver_Themer_Integrator {
 	 * @param object $settings Property settings.
 	 * @param string $property Property.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function get_field_value( $settings, $property ) {
 		$field_id = $settings->field;
@@ -65,7 +65,8 @@ class MB_Beaver_Themer_Integrator {
 			case 'image':
 			case 'image_advanced':
 			case 'plupload_image':
-				return get_post_meta( get_the_ID(), $field_id, false );
+				$value = rwmb_get_value( $field_id );
+				return array_keys( $value );
 			case 'single_image':
 				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args );
