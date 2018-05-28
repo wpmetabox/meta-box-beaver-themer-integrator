@@ -36,12 +36,12 @@ class MB_Beaver_Themer_Integrator {
 			'form'   => 'meta_box',
 		) );
 		FLPageData::add_post_property_settings_fields( 'meta_box', array(
-			'field' => array(
+			'field'      => array(
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
 				'options' => $this->get_post_fields(),
 			),
-			'image_size'  => array(
+			'image_size' => array(
 				'type'  => 'photo-sizes',
 				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
 			),
@@ -91,14 +91,17 @@ class MB_Beaver_Themer_Integrator {
 			if ( ! $post_type_object ) {
 				continue;
 			}
-			$post_type_label = $post_type_object->labels->singular_name;
+			$options = array();
 			foreach ( $list as $field ) {
 				if ( in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true ) ) {
 					continue;
 				}
-				$field_label             = $field['name'] ? $field['name'] : $field['id'];
-				$sources[ $field['id'] ] = "[{$post_type_label}] {$field_label}";
+				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
+			$sources[ $post_type ] = array(
+				'label'   => $post_type_object->labels->singular_name,
+				'options' => $options,
+			);
 		}
 
 		return $sources;
