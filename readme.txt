@@ -49,7 +49,8 @@ Install **Meta Box - Beaver Themer Integrator** extension
 
 == Screenshots ==
 1. Meta Box field in the field connection
-2. Select a Meta Box field
+2. Connect to Meta Box Field
+3. Select a Meta Box field
 
 == Changelog ==
 
