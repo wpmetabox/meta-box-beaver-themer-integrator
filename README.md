@@ -15,7 +15,7 @@ https://www.youtube.com/watch?v=8dbqEpZDTU4
 - [Homepage](https://metabox.io/plugins/meta-box-beaver-themer-integrator/)
 - [View all Meta Box extensions](https://metabox.io/plugins/)
 
-## Installation ==
+## Installation
 
 You need to install [Meta Box](https://metabox.io) plugin first
 
