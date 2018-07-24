@@ -28,5 +28,8 @@
     "files": [
       "meta-box-beaver-themer-integrator.php"
     ]
+  },
+  "require": {
+    "wpmetabox/meta-box": "^4.15"
   }
 }
