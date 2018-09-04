@@ -13,5 +13,8 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
-require 'class-mb-beaver-themer-integrator.php';
-new MB_Beaver_Themer_Integrator();
+require 'class-mbbti-posts.php';
+new MBBTI_Posts();
+
+require 'class-mbbti-settings.php';
+new MBBTI_Settings();

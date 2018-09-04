@@ -9,7 +9,7 @@
 /**
  * The plugin main class.
  */
-class MB_Beaver_Themer_Integrator {
+class MBBTI_Posts {
 	/**
 	 * Constructor.
 	 */
