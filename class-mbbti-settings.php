@@ -72,8 +72,6 @@ class MBBTI_Settings {
 		$args  = array( 'object_type' => 'setting' );
 		$field = rwmb_get_field_settings( $field_id, $args, $option_name );
 
-		info( $settings->field );
-
 		switch ( $field['type'] ) {
 			case 'image':
 			case 'image_advanced':
