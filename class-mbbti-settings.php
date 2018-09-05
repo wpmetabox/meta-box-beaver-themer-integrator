@@ -67,14 +67,12 @@ class MBBTI_Settings {
 	 * @return mixed
 	 */
 	public function get_field_value( $settings, $property ) {
-		list( $settings_page, $field_id ) = explode( '#', $settings->field );
+		list( $option_name, $field_id ) = explode( '#', $settings->field );
 
-		$settings_page_loader = new MB_Settings_Page_Loader();
-		$settings_page_loader->init();
-		$option_name = $settings_page_loader->get_option_name_from_settings_page_id( $settings_page );
+		$args  = array( 'object_type' => 'setting' );
+		$field = rwmb_get_field_settings( $field_id, $args, $option_name );
 
-		$field    = rwmb_get_field_settings( $field_id, array( 'object_type' => 'setting' ), $option_name );
-		$args     = array( 'object_type' => 'setting' );
+		info( $settings->field );
 
 		switch ( $field['type'] ) {
 			case 'image':
