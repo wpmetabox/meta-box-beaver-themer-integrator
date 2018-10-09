@@ -9,7 +9,7 @@
 /**
  * The plugin main class.
  */
-class MBBTI_Posts {
+class MBBTI_Term {
 	/**
 	 * Constructor.
 	 */
@@ -35,11 +35,29 @@ class MBBTI_Posts {
 			'getter' => array( $this, 'get_field_value' ),
 			'form'   => 'meta_box',
 		) );
-		FLPageData::add_post_property_settings_fields( 'meta_box', array(
+
+		/*
+		 * Archive Term Meta
+		 */
+		FLPageData::add_archive_property( 'meta_box_term_meta', array(
+			'label'       => __( 'Meta Box Field Term Meta', 'meta-box-beaver-themer-integrator' ),
+			'group'       => 'archives',
+			'type'        => array(
+				'string',
+				'html',
+				'photo',
+				'multiple-photos',
+				'url',
+				'custom_field',
+			),
+			'getter'      => array( $this, 'get_field__term_value' ),
+		) );
+
+		FLPageData::add_archive_property_settings_fields( 'meta_box_term_meta', array(
 			'field'      => array(
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_post_fields(),
+				'options' => $this->get_post_fields_term(),
 				'toggle'  => $this->get_toggle_rules(),
 			),
 			'image_size' => array(
@@ -52,6 +70,7 @@ class MBBTI_Posts {
 				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
 			),
 		) );
+
 	}
 
 	/**
@@ -62,12 +81,14 @@ class MBBTI_Posts {
 	 *
 	 * @return mixed
 	 */
-	public function get_field_value( $settings, $property ) {
-		$field_id = $settings->field;
-		$field    = rwmb_get_field_settings( $field_id );
+	public function get_field__term_value( $settings, $property ) {
+		$field_id      = $settings->field;
+		$term_id 	   = get_queried_object()->term_id;
+		$term_taxonomy = get_queried_object()->taxonomy;
+		$fields_obj    = rwmb_get_registry( 'field' )->get_by_object_type( 'term' );
+		$fields_type   = ! empty( $fields_obj[$term_taxonomy][$field_id]['type'] ) ? $fields_obj[$term_taxonomy][$field_id]['type'] : '';
 		$args     = array();
-
-		switch ( $field['type'] ) {
+		switch ( $fields_type ) {
 			case 'image':
 			case 'image_advanced':
 			case 'image_upload':
@@ -78,7 +99,7 @@ class MBBTI_Posts {
 				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args );
 				$value['id']  = $value['ID'];
-				return $value;
+				return $args;
 			case 'date':
 			case 'datetime':
 				if ( ! empty( $settings->date_format ) ) {
@@ -87,28 +108,27 @@ class MBBTI_Posts {
 				break;
 		}
 
-		$value = rwmb_the_value( $field_id, $args, '', false );
+		$value = rwmb_meta( $field_id, array( 'object_type' => 'term' ), $term_id );
 
 		return $value;
 	}
 
 	/**
-	 * Get list of Meta Box fields for posts.
+	 * Get list of Meta Box fields for term.
 	 *
 	 * @return array
 	 */
-	public function get_post_fields() {
+	public function get_post_fields_term() {
 		$sources = array();
-		$fields  = $this->get_all_fields();
+		$fields  = $this->get_all_fields_term();
 
-		foreach ( $fields as $post_type => $list ) {
-			$post_type_object = get_post_type_object( $post_type );
+		foreach ( $fields as $term => $list ) {
 			$options = array();
 			foreach ( $list as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
-			$sources[ $post_type ] = array(
-				'label'   => $post_type_object->labels->singular_name,
+			$sources[ $term ] = array(
+				'label'   => $term,
 				'options' => $options,
 			);
 		}
@@ -122,7 +142,7 @@ class MBBTI_Posts {
 	 * @return array
 	 */
 	public function get_toggle_rules() {
-		$fields  = $this->get_all_fields();
+		$fields  = $this->get_all_fields_term();
 		$field_map = array();
 		foreach ( $fields as $post_type => $list ) {
 			foreach ( $list as $field ) {
@@ -152,17 +172,12 @@ class MBBTI_Posts {
 	}
 
 	/**
-	 * Get all fields that have values.
+	 * Get all valuable fields in the term.
 	 *
 	 * @return array
 	 */
-	protected function get_all_fields() {
-		$fields = rwmb_get_registry( 'field' )->get_by_object_type( 'post' );
-
-		// Remove fields for non-existing post types.
-		$fields = array_filter( $fields, function( $post_type ) {
-		    return post_type_exists( $post_type );
-		}, ARRAY_FILTER_USE_KEY );
+	protected function get_all_fields_term() {
+		$fields = rwmb_get_registry( 'field' )->get_by_object_type( 'term' );
 
 		// Remove fields that don't have value.
 		array_walk( $fields, function ( &$list ) {
@@ -172,4 +187,5 @@ class MBBTI_Posts {
 		} );
 		return $fields;
 	}
+
 }

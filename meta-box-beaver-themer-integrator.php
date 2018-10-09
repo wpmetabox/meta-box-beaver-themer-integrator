@@ -16,5 +16,8 @@
 require 'class-mbbti-posts.php';
 new MBBTI_Posts();
 
+require 'class-mbbti-term.php';
+new MBBTI_Term();
+
 require 'class-mbbti-settings.php';
 new MBBTI_Settings();
