@@ -12,24 +12,28 @@
 class MBBTI_Terms extends MBBTI_Base {
 	/**
 	 * Settings group type.
+	 *
 	 * @var string
 	 */
 	protected $group = 'archives';
 
 	/**
 	 * Themer settings type: post, archive or site.
+	 *
 	 * @var string
 	 */
 	protected $type = 'archive';
 
 	/**
 	 * Object type: post, term or setting.
+	 *
 	 * @var string
 	 */
 	protected $object_type = 'term';
 
 	/**
 	 * Check if module is active.
+	 *
 	 * @return boolean
 	 */
 	public function is_active() {
@@ -38,6 +42,7 @@ class MBBTI_Terms extends MBBTI_Base {
 
 	/**
 	 * Parse settings to get field ID and object ID.
+	 *
 	 * @param  object $settings Themer settings.
 	 * @return array            Field ID and object ID.
 	 */
@@ -56,7 +61,7 @@ class MBBTI_Terms extends MBBTI_Base {
 
 		foreach ( $fields as $taxonomy => $list ) {
 			$taxonomy_object = get_taxonomy( $taxonomy );
-			$options = array();
+			$options         = array();
 			foreach ( $list as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}

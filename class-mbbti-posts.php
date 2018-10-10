@@ -12,6 +12,7 @@
 class MBBTI_Posts extends MBBTI_Base {
 	/**
 	 * Parse settings to get field ID and object ID.
+	 *
 	 * @param  object $settings Themer settings.
 	 * @return array            Field ID and object ID.
 	 */
@@ -30,7 +31,7 @@ class MBBTI_Posts extends MBBTI_Base {
 
 		foreach ( $fields as $post_type => $list ) {
 			$post_type_object = get_post_type_object( $post_type );
-			$options = array();
+			$options          = array();
 			foreach ( $list as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
@@ -44,13 +45,18 @@ class MBBTI_Posts extends MBBTI_Base {
 
 	/**
 	 * Filter fields if neccessary.
+	 *
 	 * @param  array $fields List of fields.
 	 * @return array
 	 */
 	public function filter_fields( $fields ) {
 		// Remove fields for non-existing post types.
-		return array_filter( $fields, function( $post_type ) {
-		    return post_type_exists( $post_type );
-		}, ARRAY_FILTER_USE_KEY );
+		return array_filter(
+			$fields,
+			function( $post_type ) {
+				return post_type_exists( $post_type );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
 	}
 }

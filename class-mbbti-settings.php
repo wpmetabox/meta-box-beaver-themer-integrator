@@ -12,24 +12,28 @@
 class MBBTI_Settings extends MBBTI_Base {
 	/**
 	 * Settings group type.
+	 *
 	 * @var string
 	 */
 	protected $group = 'site';
 
 	/**
 	 * Themer settings type: post, archive or site.
+	 *
 	 * @var string
 	 */
 	protected $type = 'site';
 
 	/**
 	 * Object type: post, term or setting.
+	 *
 	 * @var string
 	 */
 	protected $object_type = 'setting';
 
 	/**
 	 * Check if module is active.
+	 *
 	 * @return boolean
 	 */
 	public function is_active() {
@@ -38,6 +42,7 @@ class MBBTI_Settings extends MBBTI_Base {
 
 	/**
 	 * Parse settings to get field ID and object ID.
+	 *
 	 * @param  object $settings Themer settings.
 	 * @return array            Field ID and object ID.
 	 */
@@ -56,7 +61,7 @@ class MBBTI_Settings extends MBBTI_Base {
 		foreach ( $fields as $settings_page => $list ) {
 			$options = array();
 			foreach ( $list as $field ) {
-				$key = "{$settings_page}#{$field['id']}";
+				$key             = "{$settings_page}#{$field['id']}";
 				$options[ $key ] = $field['name'] ? $field['name'] : $field['id'];
 			}
 			$sources[ $settings_page ] = array(

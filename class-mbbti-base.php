@@ -12,18 +12,21 @@
 abstract class MBBTI_Base {
 	/**
 	 * Settings group type.
+	 *
 	 * @var string
 	 */
 	protected $group = 'posts';
 
 	/**
 	 * Themer settings type: post, archive or site.
+	 *
 	 * @var string
 	 */
 	protected $type = 'post';
 
 	/**
 	 * Object type: post, term or setting.
+	 *
 	 * @var string
 	 */
 	protected $object_type = 'post';
@@ -44,43 +47,50 @@ abstract class MBBTI_Base {
 		}
 
 		$func = "add_{$this->type}_property";
-		FLPageData::$func( 'meta_box', array(
-			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
-			'group'  => $this->group,
-			'type'   => array(
-				'string',
-				'html',
-				'photo',
-				'multiple-photos',
-				'url',
-				'custom_field',
-			),
-			'getter' => array( $this, 'get_field_value' ),
-			'form'   => 'meta_box',
-		) );
+		FLPageData::$func(
+			'meta_box',
+			array(
+				'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+				'group'  => $this->group,
+				'type'   => array(
+					'string',
+					'html',
+					'photo',
+					'multiple-photos',
+					'url',
+					'custom_field',
+				),
+				'getter' => array( $this, 'get_field_value' ),
+				'form'   => 'meta_box',
+			)
+		);
 
 		$func = "add_{$this->type}_property_settings_fields";
-		FLPageData::$func( 'meta_box', array(
-			'field'      => array(
-				'type'    => 'select',
-				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_fields(),
-				'toggle'  => $this->get_toggle_rules(),
-			),
-			'image_size' => array(
-				'type'  => 'photo-sizes',
-				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
-			),
-			'date_format' => array(
-				'type'        => 'text',
-				'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
-				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
-			),
-		) );
+		FLPageData::$func(
+			'meta_box',
+			array(
+				'field'       => array(
+					'type'    => 'select',
+					'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
+					'options' => $this->get_fields(),
+					'toggle'  => $this->get_toggle_rules(),
+				),
+				'image_size'  => array(
+					'type'  => 'photo-sizes',
+					'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
+				),
+				'date_format' => array(
+					'type'        => 'text',
+					'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
+					'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
+				),
+			)
+		);
 	}
 
 	/**
 	 * Check if module is active.
+	 *
 	 * @return boolean
 	 */
 	public function is_active() {
@@ -135,11 +145,12 @@ abstract class MBBTI_Base {
 		$fields = rwmb_get_registry( 'field' )->get_by_object_type( $this->object_type );
 
 		// Remove fields that don't have value.
-		array_walk( $fields, function ( &$list ) {
-			$list = array_filter( $list, function( $field ) {
-				return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
-			} );
-		} );
+		array_walk(
+			$fields,
+			function ( &$list ) {
+				$list = array_filter( $list, array( $this, 'has_value' ) );
+			}
+		);
 
 		$fields = $this->filter_fields( $fields );
 
@@ -147,7 +158,18 @@ abstract class MBBTI_Base {
 	}
 
 	/**
+	 * Check if field has value.
+	 *
+	 * @param  array $field Field settings.
+	 * @return boolean
+	 */
+	public function has_value( $field ) {
+		return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
+	}
+
+	/**
 	 * Filter fields if neccessary.
+	 *
 	 * @param  array $fields List of fields.
 	 * @return array
 	 */
@@ -162,7 +184,7 @@ abstract class MBBTI_Base {
 	 * @return array
 	 */
 	public function get_toggle_rules() {
-		$fields  = $this->get_all_fields();
+		$fields    = $this->get_all_fields();
 		$field_map = array();
 		foreach ( $fields as $post_type => $list ) {
 			foreach ( $list as $field ) {
@@ -180,11 +202,11 @@ abstract class MBBTI_Base {
 				case 'image_upload':
 				case 'plupload_image':
 				case 'single_image':
-					$rules[$id] = $image_rules;
+					$rules[ $id ] = $image_rules;
 					break;
 				case 'date':
 				case 'datetime':
-					$rules[$id] = $date_rules;
+					$rules[ $id ] = $date_rules;
 					break;
 			}
 		}
