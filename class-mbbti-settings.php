@@ -11,23 +11,30 @@
  */
 class MBBTI_Settings {
 	/**
+	 * Group type.
+	 *
+	 * @var string
+	 */
+	protected $group = 'site';
+	
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'fl_page_data_add_properties', array( $this, 'add_settings' ) );
+		add_action( 'fl_page_data_add_properties', array( $this, 'add_properties' ) );
 	}
 
 	/**
 	 * Add Meta Box settings fields to site group.
 	 */
-	public function add_settings() {
+	public function add_properties() {
 		if ( ! function_exists( 'mb_settings_page_load' ) ) {
 			return;
 		}
 
 		FLPageData::add_site_property( 'meta_box', array(
 			'label'  => __( 'Meta Box Settings Field', 'meta-box-beaver-themer-integrator' ),
-			'group'  => 'site',
+			'group'  => $this->group,
 			'type'   => array(
 				'string',
 				'html',

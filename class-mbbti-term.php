@@ -11,20 +11,33 @@
  */
 class MBBTI_Term {
 	/**
+	 * Group type.
+	 *
+	 * @var string
+	 */
+	protected $group = 'archives';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'fl_page_data_add_properties', array( $this, 'add_to_posts' ) );
+		add_action( 'fl_page_data_add_properties', array( $this, 'add_properties' ) );
 	}
 
 	/**
 	 * Add Meta Box Field to posts group.
 	 */
-	public function add_to_posts() {
-		FLPageData::add_post_property( 'meta_box', array(
-			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
-			'group'  => 'posts',
-			'type'   => array(
+	public function add_properties() {
+		if ( ! function_exists( 'mb_term_meta_load' ) ) {
+			return;
+		}
+		/*
+		 * Archive Term Meta
+		 */
+		FLPageData::add_archive_property( 'meta_box', array(
+			'label'       => __( 'Meta Box Term Field', 'meta-box-beaver-themer-integrator' ),
+			'group'       => $this->group,
+			'type'        => array(
 				'string',
 				'html',
 				'photo',
@@ -36,33 +49,16 @@ class MBBTI_Term {
 			'form'   => 'meta_box',
 		) );
 
-		/*
-		 * Archive Term Meta
-		 */
-		FLPageData::add_archive_property( 'meta_box_term_meta', array(
-			'label'       => __( 'Meta Box Field Term Meta', 'meta-box-beaver-themer-integrator' ),
-			'group'       => 'archives',
-			'type'        => array(
-				'string',
-				'html',
-				'photo',
-				'multiple-photos',
-				'url',
-				'custom_field',
-			),
-			'getter'      => array( $this, 'get_field__term_value' ),
-		) );
-
-		FLPageData::add_archive_property_settings_fields( 'meta_box_term_meta', array(
-			'field'      => array(
+		FLPageData::add_archive_property_settings_fields( 'meta_box', array(
+			'field'       => array(
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_post_fields_term(),
+				'options' => $this->get_term_fields(),
 				'toggle'  => $this->get_toggle_rules(),
 			),
 			'image_size' => array(
-				'type'  => 'photo-sizes',
-				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
+				'type'   => 'photo-sizes',
+				'label'  => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
 			),
 			'date_format' => array(
 				'type'        => 'text',
@@ -81,7 +77,7 @@ class MBBTI_Term {
 	 *
 	 * @return mixed
 	 */
-	public function get_field__term_value( $settings, $property ) {
+	public function get_field_value( $settings, $property ) {
 		$field_id      = $settings->field;
 		$term_id 	   = get_queried_object()->term_id;
 		$term_taxonomy = get_queried_object()->taxonomy;
@@ -118,7 +114,7 @@ class MBBTI_Term {
 	 *
 	 * @return array
 	 */
-	public function get_post_fields_term() {
+	public function get_term_fields() {
 		$sources = array();
 		$fields  = $this->get_all_fields_term();
 

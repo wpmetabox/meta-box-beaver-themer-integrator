@@ -11,19 +11,26 @@
  */
 class MBBTI_Posts {
 	/**
+	 * Group type.
+	 *
+	 * @var string
+	 */
+	protected $group = 'posts';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'fl_page_data_add_properties', array( $this, 'add_to_posts' ) );
+		add_action( 'fl_page_data_add_properties', array( $this, 'add_properties' ) );
 	}
-
+	
 	/**
 	 * Add Meta Box Field to posts group.
 	 */
-	public function add_to_posts() {
+	public function add_properties() {
 		FLPageData::add_post_property( 'meta_box', array(
-			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
-			'group'  => 'posts',
+			'label'  => __( 'Meta Box Post Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
 			'type'   => array(
 				'string',
 				'html',
