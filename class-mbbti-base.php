@@ -43,7 +43,7 @@ abstract class MBBTI_Base {
 			return;
 		}
 
-		$func = "add_{$type}_property";
+		$func = "add_{$this->type}_property";
 		FLPageData::$func( 'meta_box', array(
 			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
 			'group'  => $this->group,
@@ -59,7 +59,7 @@ abstract class MBBTI_Base {
 			'form'   => 'meta_box',
 		) );
 
-		$func = "add_{$type}_property_settings_fields";
+		$func = "add_{$this->type}_property_settings_fields";
 		FLPageData::$func( 'meta_box', array(
 			'field'      => array(
 				'type'    => 'select',
