@@ -13,11 +13,13 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
+require 'class-mbbti-base.php';
+
 require 'class-mbbti-posts.php';
 new MBBTI_Posts();
 
-require 'class-mbbti-term.php';
-new MBBTI_Term();
+require 'class-mbbti-terms.php';
+new MBBTI_Terms();
 
 require 'class-mbbti-settings.php';
 new MBBTI_Settings();

@@ -9,14 +9,40 @@
 /**
  * The plugin main class.
  */
-class MBBTI_Posts extends MBBTI_Base {
+class MBBTI_Terms extends MBBTI_Base {
+	/**
+	 * Settings group type.
+	 * @var string
+	 */
+	protected $group = 'archives';
+
+	/**
+	 * Themer settings type: post, archive or site.
+	 * @var string
+	 */
+	protected $type = 'archive';
+
+	/**
+	 * Object type: post, term or setting.
+	 * @var string
+	 */
+	protected $object_type = 'term';
+
+	/**
+	 * Check if module is active.
+	 * @return boolean
+	 */
+	public function is_active() {
+		return function_exists( 'mb_term_meta_load' );
+	}
+
 	/**
 	 * Parse settings to get field ID and object ID.
 	 * @param  object $settings Themer settings.
 	 * @return array            Field ID and object ID.
 	 */
 	public function parse_settings( $settings ) {
-		return array( get_the_ID(), $settings->field );
+		return array( get_queried_object_id(), $settings->field );
 	}
 
 	/**
@@ -28,29 +54,17 @@ class MBBTI_Posts extends MBBTI_Base {
 		$sources = array();
 		$fields  = $this->get_all_fields();
 
-		foreach ( $fields as $post_type => $list ) {
-			$post_type_object = get_post_type_object( $post_type );
+		foreach ( $fields as $taxonomy => $list ) {
+			$taxonomy_object = get_taxonomy( $taxonomy );
 			$options = array();
 			foreach ( $list as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
-			$sources[ $post_type ] = array(
-				'label'   => $post_type_object->labels->singular_name,
+			$sources[ $taxonomy ] = array(
+				'label'   => $taxonomy_object->labels->singular_name,
 				'options' => $options,
 			);
 		}
 		return $sources;
-	}
-
-	/**
-	 * Filter fields if neccessary.
-	 * @param  array $fields List of fields.
-	 * @return array
-	 */
-	public function filter_fields( $fields ) {
-		// Remove fields for non-existing post types.
-		return array_filter( $fields, function( $post_type ) {
-		    return post_type_exists( $post_type );
-		}, ARRAY_FILTER_USE_KEY );
 	}
 }

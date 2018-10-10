@@ -9,13 +9,24 @@
 /**
  * The plugin main class.
  */
-class MBBTI_Term {
+abstract class MBBTI_Base {
 	/**
-	 * Group type.
-	 *
+	 * Settings group type.
 	 * @var string
 	 */
-	protected $group = 'archives';
+	protected $group = 'posts';
+
+	/**
+	 * Themer settings type: post, archive or site.
+	 * @var string
+	 */
+	protected $type = 'post';
+
+	/**
+	 * Object type: post, term or setting.
+	 * @var string
+	 */
+	protected $object_type = 'post';
 
 	/**
 	 * Constructor.
@@ -28,16 +39,15 @@ class MBBTI_Term {
 	 * Add Meta Box Field to posts group.
 	 */
 	public function add_properties() {
-		if ( ! function_exists( 'mb_term_meta_load' ) ) {
+		if ( ! $this->is_active() ) {
 			return;
 		}
-		/*
-		 * Archive Term Meta
-		 */
-		FLPageData::add_archive_property( 'meta_box', array(
-			'label'       => __( 'Meta Box Term Field', 'meta-box-beaver-themer-integrator' ),
-			'group'       => $this->group,
-			'type'        => array(
+
+		$func = "add_{$type}_property";
+		FLPageData::$func( 'meta_box', array(
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => array(
 				'string',
 				'html',
 				'photo',
@@ -49,16 +59,17 @@ class MBBTI_Term {
 			'form'   => 'meta_box',
 		) );
 
-		FLPageData::add_archive_property_settings_fields( 'meta_box', array(
-			'field'       => array(
+		$func = "add_{$type}_property_settings_fields";
+		FLPageData::$func( 'meta_box', array(
+			'field'      => array(
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_term_fields(),
+				'options' => $this->get_fields(),
 				'toggle'  => $this->get_toggle_rules(),
 			),
 			'image_size' => array(
-				'type'   => 'photo-sizes',
-				'label'  => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
+				'type'  => 'photo-sizes',
+				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
 			),
 			'date_format' => array(
 				'type'        => 'text',
@@ -66,7 +77,14 @@ class MBBTI_Term {
 				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
 			),
 		) );
+	}
 
+	/**
+	 * Check if module is active.
+	 * @return boolean
+	 */
+	public function is_active() {
+		return true;
 	}
 
 	/**
@@ -78,24 +96,23 @@ class MBBTI_Term {
 	 * @return mixed
 	 */
 	public function get_field_value( $settings, $property ) {
-		$field_id      = $settings->field;
-		$term_id 	   = get_queried_object()->term_id;
-		$term_taxonomy = get_queried_object()->taxonomy;
-		$fields_obj    = rwmb_get_registry( 'field' )->get_by_object_type( 'term' );
-		$fields_type   = ! empty( $fields_obj[$term_taxonomy][$field_id]['type'] ) ? $fields_obj[$term_taxonomy][$field_id]['type'] : '';
-		$args     = array();
-		switch ( $fields_type ) {
+		list( $object_id, $field_id ) = $this->parse_settings( $settings );
+
+		$args  = array( 'object_type' => $this->object_type );
+		$field = rwmb_get_field_settings( $field_id, $args, $object_id );
+
+		switch ( $field['type'] ) {
 			case 'image':
 			case 'image_advanced':
 			case 'image_upload':
 			case 'plupload_image':
-				$value = rwmb_get_value( $field_id );
+				$value = rwmb_get_value( $field_id, $args, $object_id );
 				return array_keys( $value );
 			case 'single_image':
 				$args['size'] = $settings->image_size;
-				$value        = rwmb_get_value( $field_id, $args );
+				$value        = rwmb_get_value( $field_id, $args, $object_id );
 				$value['id']  = $value['ID'];
-				return $args;
+				return $value;
 			case 'date':
 			case 'datetime':
 				if ( ! empty( $settings->date_format ) ) {
@@ -104,31 +121,38 @@ class MBBTI_Term {
 				break;
 		}
 
-		$value = rwmb_meta( $field_id, array( 'object_type' => 'term' ), $term_id );
+		$value = rwmb_the_value( $field_id, $args, $object_id, false );
 
 		return $value;
 	}
 
 	/**
-	 * Get list of Meta Box fields for term.
+	 * Get all fields that have values.
 	 *
 	 * @return array
 	 */
-	public function get_term_fields() {
-		$sources = array();
-		$fields  = $this->get_all_fields_term();
+	public function get_all_fields() {
+		$fields = rwmb_get_registry( 'field' )->get_by_object_type( $this->object_type );
 
-		foreach ( $fields as $term => $list ) {
-			$options = array();
-			foreach ( $list as $field ) {
-				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
-			}
-			$sources[ $term ] = array(
-				'label'   => $term,
-				'options' => $options,
-			);
-		}
-		return $sources;
+		// Remove fields that don't have value.
+		array_walk( $fields, function ( &$list ) {
+			$list = array_filter( $list, function( $field ) {
+				return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
+			} );
+		} );
+
+		$fields = $this->filter_fields( $fields );
+
+		return $fields;
+	}
+
+	/**
+	 * Filter fields if neccessary.
+	 * @param  array $fields List of fields.
+	 * @return array
+	 */
+	public function filter_fields( $fields ) {
+		return $fields;
 	}
 
 	/**
@@ -138,7 +162,7 @@ class MBBTI_Term {
 	 * @return array
 	 */
 	public function get_toggle_rules() {
-		$fields  = $this->get_all_fields_term();
+		$fields  = $this->get_all_fields();
 		$field_map = array();
 		foreach ( $fields as $post_type => $list ) {
 			foreach ( $list as $field ) {
@@ -166,22 +190,4 @@ class MBBTI_Term {
 		}
 		return $rules;
 	}
-
-	/**
-	 * Get all valuable fields in the term.
-	 *
-	 * @return array
-	 */
-	protected function get_all_fields_term() {
-		$fields = rwmb_get_registry( 'field' )->get_by_object_type( 'term' );
-
-		// Remove fields that don't have value.
-		array_walk( $fields, function ( &$list ) {
-			$list = array_filter( $list, function( $field ) {
-				return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
-			} );
-		} );
-		return $fields;
-	}
-
 }
