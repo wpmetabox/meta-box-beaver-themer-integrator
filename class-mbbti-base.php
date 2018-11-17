@@ -64,6 +64,19 @@ abstract class MBBTI_Base {
 				'form'   => 'meta_box',
 			)
 		);
+		$func = "add_{$this->type}_property";
+		FLPageData::$func(
+			'meta_box_color',
+			array(
+				'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+				'group'  => $this->group,
+				'type'   => array(
+					'color',
+				),
+				'getter' => array( $this, 'get_color_field_value' ),
+				'form'   => 'meta_box',
+			)
+		);
 
 		$func = "add_{$this->type}_property_settings_fields";
 		FLPageData::$func(
@@ -83,6 +96,16 @@ abstract class MBBTI_Base {
 					'type'        => 'text',
 					'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
 					'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
+				),
+			)
+		);
+		FLPageData::$func(
+			'meta_box_color',
+			array(
+				'field' => array(
+					'type'    => 'select',
+					'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
+					'options' => $this->get_color_fields(),
 				),
 			)
 		);
@@ -137,24 +160,67 @@ abstract class MBBTI_Base {
 	}
 
 	/**
-	 * Get all fields that have values.
+	 * Display Meta Box field.
+	 *
+	 * @param object $settings Property settings.
+	 * @param string $property Property.
+	 *
+	 * @return mixed
+	 */
+	public function get_color_field_value( $settings, $property ) {
+		list( $object_id, $field_id ) = $this->parse_settings( $settings );
+
+		$args  = array( 'object_type' => $this->object_type );
+		$value = rwmb_get_value( $field_id, $args, $object_id );
+
+		return str_replace( '#', '', $value );
+	}
+
+	/**
+	 * Get fields.
 	 *
 	 * @return array
 	 */
-	public function get_all_fields() {
-		$fields = rwmb_get_registry( 'field' )->get_by_object_type( $this->object_type );
+	public function get_fields() {
+		$list = $this->get_field_list();
 
-		// Remove fields that don't have value.
-		array_walk(
-			$fields,
-			function ( &$list ) {
-				$list = array_filter( $list, array( $this, 'has_value' ) );
-			}
-		);
+		return $this->format( $list );
+	}
 
-		$fields = $this->filter_fields( $fields );
+	/**
+	 * Get color fields.
+	 *
+	 * @return array
+	 */
+	public function get_color_fields() {
+		$list = $this->get_field_list();
 
-		return $fields;
+		array_walk( $list, array( $this, 'filter_is_color' ) );
+
+		return $this->format( $list );
+	}
+
+	/**
+	 * Get list of fields, categorized by types.
+	 *
+	 * @return array
+	 */
+	public function get_field_list() {
+		$list = rwmb_get_registry( 'field' )->get_by_object_type( $this->object_type );
+
+		// Keep fields that have value only.
+		array_walk( $list, array( $this, 'filter_has_value' ) );
+
+		return $this->filter( $list );
+	}
+
+	/**
+	 * Filter a list of fields, keep fields that have value only.
+	 *
+	 * @param array $fields Array of fields.
+	 */
+	public function filter_has_value( &$fields ) {
+		$fields = array_filter( $fields, array( $this, 'has_value' ) );
 	}
 
 	/**
@@ -168,13 +234,32 @@ abstract class MBBTI_Base {
 	}
 
 	/**
+	 * Filter a list of fields, keep color fields only.
+	 *
+	 * @param array $fields Array of fields.
+	 */
+	public function filter_is_color( &$fields ) {
+		$fields = array_filter( $fields, array( $this, 'is_color' ) );
+	}
+
+	/**
+	 * Check if field is a color field.
+	 *
+	 * @param  array $field Field settings.
+	 * @return boolean
+	 */
+	public function is_color( $field ) {
+		return 'color' === $field['type'];
+	}
+
+	/**
 	 * Filter fields if neccessary.
 	 *
-	 * @param  array $fields List of fields.
+	 * @param  array $list List of fields.
 	 * @return array
 	 */
-	public function filter_fields( $fields ) {
-		return $fields;
+	public function filter( $list ) {
+		return $list;
 	}
 
 	/**
@@ -184,10 +269,10 @@ abstract class MBBTI_Base {
 	 * @return array
 	 */
 	public function get_toggle_rules() {
-		$fields    = $this->get_all_fields();
+		$list      = $this->get_field_list();
 		$field_map = array();
-		foreach ( $fields as $post_type => $list ) {
-			foreach ( $list as $field ) {
+		foreach ( $list as $fields ) {
+			foreach ( $fields as $field ) {
 				$field_map[ $field['id'] ] = $field['type'];
 			}
 		}

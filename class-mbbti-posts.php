@@ -21,18 +21,22 @@ class MBBTI_Posts extends MBBTI_Base {
 	}
 
 	/**
-	 * Get list of Meta Box fields.
+	 * Format list of fields to compatible with Beaver Themer's format.
 	 *
+	 * @param array $list List of fields, categoried by post type.
 	 * @return array
 	 */
-	public function get_fields() {
+	public function format( $list ) {
 		$sources = array();
-		$fields  = $this->get_all_fields();
 
-		foreach ( $fields as $post_type => $list ) {
+		if ( empty( $list ) ) {
+			return $sources;
+		}
+
+		foreach ( $list as $post_type => $fields ) {
 			$post_type_object = get_post_type_object( $post_type );
 			$options          = array();
-			foreach ( $list as $field ) {
+			foreach ( $fields as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
 			$sources[ $post_type ] = array(
@@ -40,23 +44,18 @@ class MBBTI_Posts extends MBBTI_Base {
 				'options' => $options,
 			);
 		}
+
 		return $sources;
 	}
 
 	/**
 	 * Filter fields if neccessary.
+	 * Remove fields for non-existing post types.
 	 *
-	 * @param  array $fields List of fields.
+	 * @param  array $list List of fields, categoried by post type.
 	 * @return array
 	 */
-	public function filter_fields( $fields ) {
-		// Remove fields for non-existing post types.
-		return array_filter(
-			$fields,
-			function( $post_type ) {
-				return post_type_exists( $post_type );
-			},
-			ARRAY_FILTER_USE_KEY
-		);
+	public function filter( $list ) {
+		return array_filter( $list, 'post_type_exists', ARRAY_FILTER_USE_KEY );
 	}
 }

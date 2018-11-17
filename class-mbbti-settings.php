@@ -51,16 +51,21 @@ class MBBTI_Settings extends MBBTI_Base {
 	}
 
 	/**
-	 * Get list of Meta Box fields.
+	 * Format list of fields to compatible with Beaver Themer's format.
 	 *
+	 * @param array $list List of fields, categoried by settings page.
 	 * @return array
 	 */
-	public function get_fields() {
+	public function format( $list ) {
 		$sources = array();
-		$fields  = $this->get_all_fields();
-		foreach ( $fields as $settings_page => $list ) {
+
+		if ( empty( $list ) ) {
+			return $sources;
+		}
+
+		foreach ( $list as $settings_page => $fields ) {
 			$options = array();
-			foreach ( $list as $field ) {
+			foreach ( $fields as $field ) {
 				$key             = "{$settings_page}#{$field['id']}";
 				$options[ $key ] = $field['name'] ? $field['name'] : $field['id'];
 			}

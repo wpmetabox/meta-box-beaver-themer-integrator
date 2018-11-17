@@ -51,18 +51,22 @@ class MBBTI_Terms extends MBBTI_Base {
 	}
 
 	/**
-	 * Get list of Meta Box fields.
+	 * Format list of fields to compatible with Beaver Themer's format.
 	 *
+	 * @param array $list List of fields, categoried by taxonomy.
 	 * @return array
 	 */
-	public function get_fields() {
+	public function format( $list ) {
 		$sources = array();
-		$fields  = $this->get_all_fields();
 
-		foreach ( $fields as $taxonomy => $list ) {
+		if ( empty( $list ) ) {
+			return $sources;
+		}
+
+		foreach ( $list as $taxonomy => $fields ) {
 			$taxonomy_object = get_taxonomy( $taxonomy );
 			$options         = array();
-			foreach ( $list as $field ) {
+			foreach ( $fields as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
 			$sources[ $taxonomy ] = array(
@@ -70,6 +74,7 @@ class MBBTI_Terms extends MBBTI_Base {
 				'options' => $options,
 			);
 		}
+
 		return $sources;
 	}
 }
