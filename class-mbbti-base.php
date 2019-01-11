@@ -211,7 +211,7 @@ abstract class MBBTI_Base {
 		// Keep fields that have value only.
 		array_walk( $list, array( $this, 'filter_has_value' ) );
 
-		return $this->filter( $list );
+		return $list;
 	}
 
 	/**
@@ -250,16 +250,6 @@ abstract class MBBTI_Base {
 	 */
 	public function is_color( $field ) {
 		return 'color' === $field['type'];
-	}
-
-	/**
-	 * Filter fields if neccessary.
-	 *
-	 * @param  array $list List of fields.
-	 * @return array
-	 */
-	public function filter( $list ) {
-		return $list;
 	}
 
 	/**

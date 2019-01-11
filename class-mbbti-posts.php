@@ -47,15 +47,4 @@ class MBBTI_Posts extends MBBTI_Base {
 
 		return $sources;
 	}
-
-	/**
-	 * Filter fields if neccessary.
-	 * Remove fields for non-existing post types.
-	 *
-	 * @param  array $list List of fields, categoried by post type.
-	 * @return array
-	 */
-	public function filter( $list ) {
-		return array_filter( $list, 'post_type_exists', ARRAY_FILTER_USE_KEY );
-	}
 }
