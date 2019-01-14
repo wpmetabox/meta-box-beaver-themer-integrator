@@ -23,3 +23,8 @@ new MBBTI_Terms();
 
 require 'class-mbbti-settings.php';
 new MBBTI_Settings();
+
+function file_logic() {
+	require 'class-mbbti-logic.php';
+}
+add_action( 'bb_logic_init', 'file_logic' );
