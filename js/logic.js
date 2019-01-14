@@ -81,7 +81,7 @@ var __ = BBLogic.i18n.__;
 
 
 addRuleTypeCategory('metabox', {
-	label: __('Meta Box Fields')
+	label: __('Meta Box')
 });
 
 /***/ }),
@@ -98,8 +98,8 @@ var _BBLogic$api = BBLogic.api,
 var __ = BBLogic.i18n.__;
 
 
-addRuleType('metabox/archive-field', {
-	label: __('MB Archive Field'),
+addRuleType('metabox/term-field', {
+	label: __('Term Field'),
 	category: 'metabox',
 	form: getFormPreset('key-value')
 });
@@ -119,7 +119,7 @@ var __ = BBLogic.i18n.__;
 
 
 addRuleType('metabox/post-field', {
-	label: __('MB Post Field'),
+	label: __('Post Field'),
 	category: 'metabox',
 	form: getFormPreset('key-value')
 });
@@ -139,7 +139,7 @@ var __ = BBLogic.i18n.__;
 
 
 addRuleType('metabox/post-author-field', {
-	label: __('MB Post Author Field'),
+	label: __('Post Author Field'),
 	category: 'metabox',
 	form: getFormPreset('key-value')
 });
@@ -159,7 +159,7 @@ var __ = BBLogic.i18n.__;
 
 
 addRuleType('metabox/user-field', {
-	label: __('MB User Field'),
+	label: __('User Field'),
 	category: 'metabox',
 	form: getFormPreset('key-value')
 });
