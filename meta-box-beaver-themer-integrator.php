@@ -24,7 +24,12 @@ new MBBTI_Terms();
 require 'class-mbbti-settings.php';
 new MBBTI_Settings();
 
-function file_logic() {
+/**
+ * Add support for Beaver Builder Conditional Logic.
+ */
+function mbbti_logic() {
 	require 'class-mbbti-logic.php';
+	$logic = new MBBTI_Logic();
+	$logic->init();
 }
-add_action( 'bb_logic_init', 'file_logic' );
+add_action( 'bb_logic_init', 'mbbti_logic' );
