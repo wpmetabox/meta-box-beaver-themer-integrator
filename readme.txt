@@ -3,8 +3,8 @@ Contributors: metabox, rilwis
 Donate link: https://metabox.io/pricing/
 Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
 Requires at least: 4.9
-Tested up to: 4.9.8
-Stable tag: 1.2.1
+Tested up to: 5.0.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 
 Integrates Meta Box's custom fields with Beaver Themer.
@@ -54,6 +54,29 @@ Install **Meta Box - Beaver Themer Integrator** extension
 
 == Changelog ==
 
-[See full changelog here](https://github.com/wpmetabox/meta-box-beaver-themer-integrator/CHANGELOG.md).
+= 1.3.0 =
+
+**Added**
+- Added support for Beaver Themer's Conditional Logic on the front end. See this [announcement post](https://metabox.io/introducing-beaver-themer-conditional-logic-integration/) and [video tutorial](https://youtu.be/b9E2-jhjTZE).
+
+= 1.2.1 =
+
+**Added**
+- Added missing support for background/text color for rows/columns/elements.
+
+= 1.2.0 =
+
+**Added**
+- Added support for [MB Term Meta](https://metabox.io/plugins/mb-term-meta/) and [MB Settings Page](https://metabox.io/plugins/mb-settings-page/), allowing you to pull term's custom fields and website settings to the front end.
+
+= 1.1.0 =
+
+**Added**
+- Added date format for `date`, `datetime` fields
+- Added field dependency, showing extra params only for correct field types
+
+= 1.0.0 =
+- First release
+
 
 == Upgrade Notice ==
