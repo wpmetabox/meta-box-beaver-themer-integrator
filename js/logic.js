@@ -98,8 +98,8 @@ var _BBLogic$api = BBLogic.api,
 var __ = BBLogic.i18n.__;
 
 
-addRuleType('metabox/term-field', {
-	label: __('Term Field'),
+addRuleType('metabox/archive-field', {
+	label: __('Archive Field'),
 	category: 'metabox',
 	form: getFormPreset('key-value')
 });

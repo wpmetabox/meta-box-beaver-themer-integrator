@@ -14,13 +14,11 @@ class MBBTI_Logic {
 	 * Sets up callbacks for conditional logic rules.
 	 */
 	public function init() {
-		BB_Logic_Rules::register(
-			array(
-				'metabox/archive-field'     => array( $this, 'archive_field' ),
-				'metabox/post-field'        => array( $this, 'post_field' ),
-				'metabox/post-author-field' => array( $this, 'post_author_field' ),
-				'metabox/user-field'        => array( $this, 'user_field' ),
-			)
+		$rules = array(
+			'metabox/archive-field'     => array( $this, 'archive_field' ),
+			'metabox/post-field'        => array( $this, 'post_field' ),
+			'metabox/post-author-field' => array( $this, 'post_author_field' ),
+			'metabox/user-field'        => array( $this, 'user_field' ),
 		);
 		add_action( 'bb_logic_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
@@ -45,9 +43,7 @@ class MBBTI_Logic {
 	 * @param object $rule      Conditional logic rule.
 	 * @return bool
 	 */
-	public function evaluate_rule( $object_id = false, $rule ) {
-		$value = rwmb_meta( $rule->key, '', $object_id );
-
+	public function evaluate_rule( $value = false, $rule ) {
 		if ( is_array( $value ) ) {
 			$value = empty( $value ) ? 0 : 1;
 		} elseif ( is_object( $value ) ) {
@@ -71,15 +67,10 @@ class MBBTI_Logic {
 	 * @return bool
 	 */
 	public function archive_field( $rule ) {
-		$object = get_queried_object();
+		$term_id = get_queried_object_id();
+		$value   = rwmb_meta( $rule->key, array( 'object_type' => 'term' ), $term_id );
 
-		if ( ! is_object( $object ) || ! isset( $object->taxonomy ) || ! isset( $object->term_id ) ) {
-			$id = 'archive';
-		} else {
-			$id = $object->taxonomy . '_' . $object->term_id;
-		}
-
-		return $this->evaluate_rule( $id, $rule );
+		return $this->evaluate_rule( $value, $rule );
 	}
 
 	/**
@@ -90,8 +81,10 @@ class MBBTI_Logic {
 	 */
 	public function post_field( $rule ) {
 		global $post;
-		$id = is_object( $post ) ? $post->ID : 0;
-		return $this->evaluate_rule( $id, $rule );
+		$post_id = is_object( $post ) ? $post->ID : 0;
+		$value   = rwmb_meta( $rule->key, '', $post_id );
+
+		return $this->evaluate_rule( $value, $rule );
 	}
 
 	/**
@@ -102,8 +95,10 @@ class MBBTI_Logic {
 	 */
 	public function post_author_field( $rule ) {
 		global $post;
-		$id = is_object( $post ) ? $post->post_author : 0;
-		return $this->evaluate_rule( 'user_' . $id, $rule );
+		$id    = is_object( $post ) ? $post->post_author : 0;
+		$value = rwmb_meta( $rule->key, array( 'object_type' => 'user' ), $post->post_author );
+
+		return $this->evaluate_rule( $value, $rule );
 	}
 
 	/**
@@ -113,7 +108,9 @@ class MBBTI_Logic {
 	 * @return bool
 	 */
 	public function user_field( $rule ) {
-		$user = wp_get_current_user();
-		return $this->evaluate_rule( 'user_' . $user->ID, $rule );
+		$user  = wp_get_current_user();
+		$value = rwmb_meta( $rule->key, array( 'object_type' => 'user' ), $user->ID );
+
+		return $this->evaluate_rule( $value, $rule );
 	}
 }
