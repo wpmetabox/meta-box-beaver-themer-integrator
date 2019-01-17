@@ -14,11 +14,14 @@ class MBBTI_Logic {
 	 * Sets up callbacks for conditional logic rules.
 	 */
 	public function init() {
-		$rules = array(
-			'metabox/archive-field'     => array( $this, 'archive_field' ),
-			'metabox/post-field'        => array( $this, 'post_field' ),
-			'metabox/post-author-field' => array( $this, 'post_author_field' ),
-			'metabox/user-field'        => array( $this, 'user_field' ),
+		BB_Logic_Rules::register(
+			array(
+				'metabox/archive-field'       => array( $this, 'archive_field' ),
+				'metabox/post-field'          => array( $this, 'post_field' ),
+				'metabox/post-author-field'   => array( $this, 'post_author_field' ),
+				'metabox/user-field'          => array( $this, 'user_field' ),
+				'metabox/settings-page-field' => array( $this, 'settings_page_field' ),
+			)
 		);
 		add_action( 'bb_logic_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
@@ -113,4 +116,16 @@ class MBBTI_Logic {
 
 		return $this->evaluate_rule( $value, $rule );
 	}
+
+	/**
+	 * Settings page rule.
+	 *
+	 * @param object $rule Conditional logic rule.
+	 * @return bool
+	 */
+	public function settings_page_field( $rule ) {
+		$value = rwmb_meta( $rule->key, array( 'object_type' => 'setting' ), $rule->option_name );
+		return $this->evaluate_rule( $value, $rule );
+	}
+
 }

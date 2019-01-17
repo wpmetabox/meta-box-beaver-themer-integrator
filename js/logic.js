@@ -75,6 +75,7 @@ __webpack_require__(380);
 __webpack_require__(381);
 __webpack_require__(382);
 __webpack_require__(383);
+__webpack_require__(384);
 
 var addRuleTypeCategory = BBLogic.api.addRuleTypeCategory;
 var __ = BBLogic.i18n.__;
@@ -164,6 +165,50 @@ addRuleType('metabox/user-field', {
 	form: getFormPreset('key-value')
 });
 
+/***/ }),
+
+/***/ 384:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _BBLogic$api = BBLogic.api,
+    addRuleType = _BBLogic$api.addRuleType,
+    getFormPreset = _BBLogic$api.getFormPreset;
+var __ = BBLogic.i18n.__;
+
+
+addRuleType('metabox/settings-page-field', {
+	label: __('Settings Page Field'),
+	category: 'metabox',
+	form: function( props ) {
+		var operator = props.rule.operator
+		return {
+			key: {
+				type: 'text',
+				placeholder: 'Key',
+			},
+			operator: {
+				type: 'operator',
+				operators: [
+					'equals',
+					'does_not_equal',
+					'is_set',
+				],
+			},
+			compare: {
+				type: 'text',
+				placeholder: 'Value',
+				visible: 'is_set' !== operator,
+			},
+			option_name: {
+				type: 'text',
+				placeholder: 'Option name',
+			},
+		}
+	}
+});
 /***/ }),
 
 /******/ });
