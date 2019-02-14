@@ -54,6 +54,11 @@ Install **Meta Box - Beaver Themer Integrator** extension
 
 == Changelog ==
 
+= 1.3.1 =
+
+**Fixed**
+- Fixed undefined index when a post type doesn't exist.
+
 = 1.3.0 =
 
 **Added**

@@ -35,7 +35,10 @@ class MBBTI_Posts extends MBBTI_Base {
 
 		foreach ( $list as $post_type => $fields ) {
 			$post_type_object = get_post_type_object( $post_type );
-			$options          = array();
+			if ( null === $post_type_object ) {
+				continue;
+			}
+			$options = array();
 			foreach ( $fields as $field ) {
 				$options[ $field['id'] ] = $field['name'] ? $field['name'] : $field['id'];
 			}
