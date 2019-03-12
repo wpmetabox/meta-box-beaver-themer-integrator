@@ -10,6 +10,14 @@
  * Handle conditional logic settings in the front end for Beaver Themer.
  */
 class MBBTI_Logic {
+	public function __construct() {
+		if ( did_action( 'bb_logic_init' ) ) {
+			$this->init();
+		} else {
+			add_action( 'bb_logic_init', array( $this, 'init' ) );
+		}
+	}
+
 	/**
 	 * Sets up callbacks for conditional logic rules.
 	 */
