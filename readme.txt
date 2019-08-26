@@ -3,6 +3,7 @@ Contributors: metabox, rilwis
 Donate link: https://metabox.io/pricing/
 Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
 Requires at least: 4.9
+Requires PHP: 5.3
 Tested up to: 5.1
 Stable tag: 1.3.1
 License: GPLv2 or later

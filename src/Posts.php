@@ -6,10 +6,12 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
+namespace MBBTI;
+
 /**
  * The plugin main class.
  */
-class MBBTI_Posts extends MBBTI_Base {
+class Posts extends Base {
 	/**
 	 * Parse settings to get field ID and object ID.
 	 *

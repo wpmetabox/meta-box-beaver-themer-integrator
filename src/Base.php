@@ -6,10 +6,14 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
+namespace MBBTI;
+
+use FLPageData;
+
 /**
  * The plugin main class.
  */
-abstract class MBBTI_Base {
+abstract class Base {
 	/**
 	 * Settings group type.
 	 *

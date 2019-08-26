@@ -6,10 +6,12 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
+namespace MBBTI;
+
 /**
  * Settings class.
  */
-class MBBTI_Settings extends MBBTI_Base {
+class Settings extends Base {
 	/**
 	 * Settings group type.
 	 *

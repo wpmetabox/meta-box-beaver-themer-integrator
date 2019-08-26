@@ -13,16 +13,9 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
-require 'class-mbbti-base.php';
+require __DIR__ . '/vendor/autoload.php';
 
-require 'class-mbbti-posts.php';
-new MBBTI_Posts();
-
-require 'class-mbbti-terms.php';
-new MBBTI_Terms();
-
-require 'class-mbbti-settings.php';
-new MBBTI_Settings();
-
-require 'class-mbbti-logic.php';
-new MBBTI_Logic();
+new MBBTI\Posts();
+new MBBTI\Terms();
+new MBBTI\Settings();
+new MBBTI\ConditionalLogic();

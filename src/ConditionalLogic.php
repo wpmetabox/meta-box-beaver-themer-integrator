@@ -6,10 +6,14 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
+namespace MBBTI;
+
+use BB_Logic_Rules;
+
 /**
  * Handle conditional logic settings in the front end for Beaver Themer.
  */
-class MBBTI_Logic {
+class ConditionalLogic {
 	public function __construct() {
 		if ( did_action( 'bb_logic_init' ) ) {
 			$this->init();
