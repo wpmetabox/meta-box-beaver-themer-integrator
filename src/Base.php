@@ -36,6 +36,13 @@ abstract class Base {
 	protected $object_type = 'post';
 
 	/**
+	 * List of fields.
+	 *
+	 * @var array
+	 */
+	private $field_list;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -187,7 +194,7 @@ abstract class Base {
 	 *
 	 * @return array
 	 */
-	public function get_fields() {
+	private function get_fields() {
 		$list = $this->get_field_list();
 
 		return $this->format( $list );
@@ -198,10 +205,13 @@ abstract class Base {
 	 *
 	 * @return array
 	 */
-	public function get_color_fields() {
+	private function get_color_fields() {
 		$list = $this->get_field_list();
 
-		array_walk( $list, array( $this, 'filter_is_color' ) );
+		// Keep only color fields.
+		foreach ( $list as &$fields ) {
+			$fields = array_filter( $fields, array( $this, 'is_color' ) );
+		}
 
 		return $this->format( $list );
 	}
@@ -211,50 +221,40 @@ abstract class Base {
 	 *
 	 * @return array
 	 */
-	public function get_field_list() {
+	private function get_field_list() {
+		if ( ! empty( $this->field_list ) ) {
+			return $this->field_list;
+		}
+
 		$list = rwmb_get_registry( 'field' )->get_by_object_type( $this->object_type );
 
 		// Keep fields that have value only.
-		array_walk( $list, array( $this, 'filter_has_value' ) );
+		foreach ( $list as &$fields ) {
+			$fields = array_filter( $fields, array( $this, 'has_value' ) );
+		}
+
+		$this->field_list = $list;
 
 		return $list;
 	}
 
 	/**
-	 * Filter a list of fields, keep fields that have value only.
-	 *
-	 * @param array $fields Array of fields.
-	 */
-	public function filter_has_value( &$fields ) {
-		$fields = array_filter( $fields, array( $this, 'has_value' ) );
-	}
-
-	/**
-	 * Check if field has value.
+	 * Check if a field has value.
 	 *
 	 * @param  array $field Field settings.
-	 * @return boolean
+	 * @return bool
 	 */
-	public function has_value( $field ) {
+	private function has_value( $field ) {
 		return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
 	}
 
 	/**
-	 * Filter a list of fields, keep color fields only.
-	 *
-	 * @param array $fields Array of fields.
-	 */
-	public function filter_is_color( &$fields ) {
-		$fields = array_filter( $fields, array( $this, 'is_color' ) );
-	}
-
-	/**
-	 * Check if field is a color field.
+	 * Check if a field is a color field.
 	 *
 	 * @param  array $field Field settings.
-	 * @return boolean
+	 * @return bool
 	 */
-	public function is_color( $field ) {
+	private function is_color( $field ) {
 		return 'color' === $field['type'];
 	}
 
@@ -264,7 +264,7 @@ abstract class Base {
 	 *
 	 * @return array
 	 */
-	public function get_toggle_rules() {
+	private function get_toggle_rules() {
 		$list      = $this->get_field_list();
 		$field_map = array();
 		foreach ( $list as $fields ) {
