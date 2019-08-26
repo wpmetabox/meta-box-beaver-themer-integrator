@@ -79,26 +79,28 @@ abstract class MBBTI_Base {
 		);
 
 		$func = "add_{$this->type}_property_settings_fields";
-		FLPageData::$func(
-			'meta_box',
-			array(
-				'field'       => array(
-					'type'    => 'select',
-					'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-					'options' => $this->get_fields(),
-					'toggle'  => $this->get_toggle_rules(),
-				),
-				'image_size'  => array(
-					'type'  => 'photo-sizes',
-					'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
-				),
-				'date_format' => array(
-					'type'        => 'text',
-					'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
-					'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
-				),
+		$fields = array(
+			'field' => array(
+				'type'    => 'select',
+				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
+				'options' => $this->get_fields(),
+				'toggle'  => $this->get_toggle_rules(),
 			)
 		);
+		if ( $this->has_image_field() ) {
+			$fields['image_size'] = array(
+				'type'  => 'photo-sizes',
+				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
+			);
+		}
+		if ( $this->has_date_field() ) {
+			$fields['date_format'] = array(
+				'type'        => 'text',
+				'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
+				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
+			);
+		}
+		FLPageData::$func( 'meta_box', $fields );
 		FLPageData::$func(
 			'meta_box_color',
 			array(
@@ -286,5 +288,41 @@ abstract class MBBTI_Base {
 			}
 		}
 		return $rules;
+	}
+
+	/**
+	 * Check if the field list has an image field.
+	 *
+	 * @return bool
+	 */
+	private function has_image_field() {
+		$types = array( 'image', 'image_advanced', 'image_upload', 'plupload_image', 'single_image' );
+		$list = $this->get_field_list();
+		foreach ( $list as $type => $fields ) {
+			foreach ( $fields as $field ) {
+				if ( in_array( $field['type'], $types, true ) ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if the field list has a date time field.
+	 *
+	 * @return bool
+	 */
+	private function has_date_field() {
+		$types = array( 'date', 'datetime' );
+		$list = $this->get_field_list();
+		foreach ( $list as $type => $fields ) {
+			foreach ( $fields as $field ) {
+				if ( in_array( $field['type'], $types, true ) ) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
