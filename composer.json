@@ -1,5 +1,33 @@
 {
+  "name": "wpmetabox/meta-box-beaver-themer-integrator",
+  "type": "library",
+  "keywords": [
+    "wordpress",
+    "ui",
+    "select2",
+    "wp-admin",
+    "meta-box",
+    "wordpress-plugin",
+    "custom-field",
+    "beaver-builder",
+    "beaver-themer"
+  ],
+  "description": "Integrates Meta Box's custom fields with Beaver Themer.",
+  "homepage": "https://metabox.io/plugins/meta-box-beaver-themer-integrator/",
+  "license": "GPL-2.0",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Tran Ngoc Tuan Anh",
+      "email": "anhtnt@elightup.com",
+      "homepage": "https://deluxeblogtips.com",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "psr-4": {"MBBTI\\" : "src/"}
+  },
+  "require": {
+    "wpmetabox/meta-box": "^5"
   }
 }
