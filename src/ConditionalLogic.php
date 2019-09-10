@@ -44,7 +44,7 @@ class ConditionalLogic {
 	public function enqueue() {
 		wp_enqueue_script(
 			'bb-logic-rules-metabox',
-			plugin_dir_url( __FILE__ ) . 'js/logic.js',
+			plugin_dir_url( __DIR__ ) . 'js/logic.js',
 			array( 'bb-logic-core' ),
 			BB_LOGIC_VERSION,
 			true
