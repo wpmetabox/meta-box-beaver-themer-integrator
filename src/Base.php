@@ -267,9 +267,10 @@ abstract class Base {
 	private function get_toggle_rules() {
 		$list      = $this->get_field_list();
 		$field_map = array();
-		foreach ( $list as $fields ) {
+		foreach ( $list as $object => $fields ) {
 			foreach ( $fields as $field ) {
-				$field_map[ $field['id'] ] = $field['type'];
+				$key = 'setting' === $this->object_type ? "{$object}#{$field['id']}" : $field['id'];
+				$field_map[ $key ] = $field['type'];
 			}
 		}
 
