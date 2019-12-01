@@ -26,8 +26,5 @@
   ],
   "autoload": {
     "psr-4": {"MBBTI\\" : "src/"}
-  },
-  "require": {
-    "wpmetabox/meta-box": "^5"
   }
 }
