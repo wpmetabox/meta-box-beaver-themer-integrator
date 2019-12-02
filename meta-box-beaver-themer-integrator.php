@@ -13,7 +13,11 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
-require __DIR__ . '/vendor/autoload.php';
+defined( 'ABSPATH' ) || die;
+
+if ( file_exists( __DIR__ . '/vendor' ) ) {
+	require __DIR__ . '/vendor/autoload.php';
+}
 
 new MBBTI\Posts();
 new MBBTI\Terms();
