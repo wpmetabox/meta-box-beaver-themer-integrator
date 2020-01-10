@@ -1,4 +1,4 @@
-( function( __, addRuleTypeCategory, addRuleType, getFormPreset ) {
+( function( __, addRuleTypeCategory, addRuleType, getFormPreset, i18n ) {
 	addRuleTypeCategory( 'metabox', {
 		label: __( 'Meta Box' )
 	} );
@@ -28,6 +28,10 @@
 		form: function( props ) {
 			var operator = props.rule.operator
 			return {
+				option_name: {
+					type: 'select',
+					options: i18n.settingsPages
+				},
 				key: {
 					type: 'text',
 					placeholder: 'Key',
@@ -45,11 +49,7 @@
 					placeholder: 'Value',
 					visible: 'is_set' !== operator,
 				},
-				option_name: {
-					type: 'text',
-					placeholder: __( 'Option name' ),
-				},
 			}
 		}
 	} );
-} )( BBLogic.i18n.__, BBLogic.api.addRuleTypeCategory, BBLogic.api.addRuleType, BBLogic.api.getFormPreset );
+} )( BBLogic.i18n.__, BBLogic.api.addRuleTypeCategory, BBLogic.api.addRuleType, BBLogic.api.getFormPreset, MBBTILogic );
