@@ -46,37 +46,30 @@ class ConditionalLogic {
 	}
 
 	public function archive_field( $rule ) {
-		$term_id = get_queried_object_id();
-		$value   = rwmb_meta( $rule->key, array( 'object_type' => 'term' ), $term_id );
-
+		$value = rwmb_meta( $rule->key, ['object_type' => 'term'], get_queried_object_id() );
 		return $this->evaluate_rule( $value, $rule );
 	}
 
 	public function post_field( $rule ) {
-		global $post;
-		$post_id = is_object( $post ) ? $post->ID : 0;
-		$value   = rwmb_meta( $rule->key, '', $post_id );
-
+		$value = rwmb_meta( $rule->key );
 		return $this->evaluate_rule( $value, $rule );
 	}
 
 	public function post_author_field( $rule ) {
 		global $post;
 		$id    = is_object( $post ) ? $post->post_author : 0;
-		$value = rwmb_meta( $rule->key, array( 'object_type' => 'user' ), $post->post_author );
+		$value = rwmb_meta( $rule->key, ['object_type' => 'user'], $post->post_author );
 
 		return $this->evaluate_rule( $value, $rule );
 	}
 
 	public function user_field( $rule ) {
-		$user  = wp_get_current_user();
-		$value = rwmb_meta( $rule->key, array( 'object_type' => 'user' ), $user->ID );
-
+		$value = rwmb_meta( $rule->key, ['object_type' => 'user'], get_current_user_id() );
 		return $this->evaluate_rule( $value, $rule );
 	}
 
 	public function settings_page_field( $rule ) {
-		$value = rwmb_meta( $rule->key, array( 'object_type' => 'setting' ), $rule->option_name );
+		$value = rwmb_meta( $rule->key, ['object_type' => 'setting'], $rule->option_name );
 		return $this->evaluate_rule( $value, $rule );
 	}
 
