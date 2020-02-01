@@ -23,4 +23,5 @@ new MBBTI\Posts;
 new MBBTI\Terms;
 new MBBTI\Settings;
 new MBBTI\Authors;
+new MBBTI\Users;
 new MBBTI\ConditionalLogic;
