@@ -58,70 +58,58 @@ abstract class Base {
 		}
 
 		$func = "add_{$this->type}_property";
-		FLPageData::$func(
-			'meta_box',
-			array(
-				'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
-				'group'  => $this->group,
-				'type'   => array(
-					'string',
-					'html',
-					'photo',
-					'multiple-photos',
-					'url',
-					'custom_field',
-				),
-				'getter' => array( $this, 'get_field_value' ),
-				'form'   => 'meta_box',
-			)
-		);
-		$func = "add_{$this->type}_property";
-		FLPageData::$func(
-			'meta_box_color',
-			array(
-				'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
-				'group'  => $this->group,
-				'type'   => array(
-					'color',
-				),
-				'getter' => array( $this, 'get_color_field_value' ),
-				'form'   => 'meta_box',
-			)
-		);
+		FLPageData::$func( 'meta_box', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => [
+				'string',
+				'html',
+				'photo',
+				'multiple-photos',
+				'url',
+				'custom_field',
+			],
+			'getter' => [ $this, 'get_field_value' ],
+			'form'   => 'meta_box',
+		] );
+		FLPageData::$func( 'meta_box_color', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => ['color'],
+			'getter' => [ $this, 'get_color_field_value' ],
+			'form'   => 'meta_box',
+		] );
 
 		$func = "add_{$this->type}_property_settings_fields";
-		$fields = array(
-			'field' => array(
+		$fields = [
+			'field' => [
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
 				'options' => $this->get_fields(),
 				'toggle'  => $this->get_toggle_rules(),
-			)
-		);
+			]
+		];
 		if ( $this->has_image_field() ) {
-			$fields['image_size'] = array(
+			$fields['image_size'] = [
 				'type'  => 'photo-sizes',
 				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
-			);
+			];
 		}
 		if ( $this->has_date_field() ) {
-			$fields['date_format'] = array(
+			$fields['date_format'] = [
 				'type'        => 'text',
 				'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
 				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
-			);
+			];
 		}
 		FLPageData::$func( 'meta_box', $fields );
-		FLPageData::$func(
-			'meta_box_color',
-			array(
-				'field' => array(
-					'type'    => 'select',
-					'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-					'options' => $this->get_color_fields(),
-				),
-			)
-		);
+		FLPageData::$func( 'meta_box_color', [
+			'field' => [
+				'type'    => 'select',
+				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
+				'options' => $this->get_color_fields(),
+			],
+		] );
 	}
 
 	/**
@@ -189,23 +177,12 @@ abstract class Base {
 		return str_replace( '#', '', $value );
 	}
 
-	/**
-	 * Get fields.
-	 *
-	 * @return array
-	 */
-	private function get_fields() {
+	protected function get_fields() {
 		$list = $this->get_field_list();
-
 		return $this->format( $list );
 	}
 
-	/**
-	 * Get color fields.
-	 *
-	 * @return array
-	 */
-	private function get_color_fields() {
+	protected function get_color_fields() {
 		$list = $this->get_field_list();
 
 		// Keep only color fields.
@@ -264,7 +241,7 @@ abstract class Base {
 	 *
 	 * @return array
 	 */
-	private function get_toggle_rules() {
+	protected function get_toggle_rules() {
 		$list      = $this->get_field_list();
 		$field_map = array();
 		foreach ( $list as $object => $fields ) {
@@ -300,7 +277,7 @@ abstract class Base {
 	 *
 	 * @return bool
 	 */
-	private function has_image_field() {
+	protected function has_image_field() {
 		$types = array( 'image', 'image_advanced', 'image_upload', 'plupload_image', 'single_image' );
 		$list = $this->get_field_list();
 		foreach ( $list as $type => $fields ) {
@@ -318,7 +295,7 @@ abstract class Base {
 	 *
 	 * @return bool
 	 */
-	private function has_date_field() {
+	protected function has_date_field() {
 		$types = array( 'date', 'datetime' );
 		$list = $this->get_field_list();
 		foreach ( $list as $type => $fields ) {

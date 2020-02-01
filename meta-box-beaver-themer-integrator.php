@@ -19,7 +19,8 @@ if ( file_exists( __DIR__ . '/vendor' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-new MBBTI\Posts();
-new MBBTI\Terms();
-new MBBTI\Settings();
-new MBBTI\ConditionalLogic();
+new MBBTI\Posts;
+new MBBTI\Terms;
+new MBBTI\Settings;
+new MBBTI\Authors;
+new MBBTI\ConditionalLogic;
