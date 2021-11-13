@@ -30,7 +30,7 @@ class ConditionalLogic {
 		] );
 	}
 
-	public function evaluate_rule( $value = false, $rule ) {
+	public function evaluate_rule( $value, $rule ) {
 		if ( is_array( $value ) ) {
 			$value = empty( $value ) ? 0 : 1;
 		} elseif ( is_object( $value ) ) {
@@ -58,7 +58,7 @@ class ConditionalLogic {
 	public function post_author_field( $rule ) {
 		global $post;
 		$id    = is_object( $post ) ? $post->post_author : 0;
-		$value = rwmb_meta( $rule->key, ['object_type' => 'user'], $post->post_author );
+		$value = rwmb_meta( $rule->key, ['object_type' => 'user'], $id );
 
 		return $this->evaluate_rule( $value, $rule );
 	}

@@ -3,9 +3,9 @@ Contributors: metabox, rilwis
 Donate link: https://metabox.io/pricing/
 Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
 Requires at least: 4.9
-Requires PHP: 5.4
-Tested up to: 5.3.2
-Stable tag: 1.4.0
+Requires PHP: 5.6
+Tested up to: 5.8.2
+Stable tag: 1.4.1
 License: GPLv2 or later
 
 Integrates Meta Box's custom fields with Beaver Themer.
@@ -55,59 +55,38 @@ Install **Meta Box - Beaver Themer Integrator** extension
 
 == Changelog ==
 
+= 1.4.1 - 2021-11-13 =
+- Fix deprecated notice for conditional logic
+
 = 1.4.0 - 2020-02-04 =
-
-**Added**
-
 - Add support for post author's custom fields
 - Add support for user's custom fields
 
 = 1.3.5 - 2020-01-20 =
-
-**Changed**
-
 - Conditional logic: make option name a select field for settings page
 
 = 1.3.4 - 2019-11-28 =
-
-**Fixed**
-
 - Fix toggle rules for settings fields
 
 = 1.3.3 - 2019-09-18 =
-
-**Fixed**
-
 - Fix wrong URL to JS file
 
 = 1.3.2 =
-
-**Changed**
 - Hide image size and date format when not needed
 
 = 1.3.1 =
-
-**Fixed**
 - Fixed undefined index when a post type doesn't exist.
 
 = 1.3.0 =
-
-**Added**
 - Added support for Beaver Themer's Conditional Logic on the front end. See this [announcement post](https://metabox.io/introducing-beaver-themer-conditional-logic-integration/) and [video tutorial](https://youtu.be/b9E2-jhjTZE).
 
 = 1.2.1 =
-
-**Added**
 - Added missing support for background/text color for rows/columns/elements.
 
 = 1.2.0 =
-
-**Added**
 - Added support for [MB Term Meta](https://metabox.io/plugins/mb-term-meta/) and [MB Settings Page](https://metabox.io/plugins/mb-settings-page/), allowing you to pull term's custom fields and website settings to the front end.
 
 = 1.1.0 =
-
-**Added**
 - Added date format for `date`, `datetime` fields
 - Added field dependency, showing extra params only for correct field types
 
