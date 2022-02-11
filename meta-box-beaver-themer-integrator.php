@@ -7,7 +7,7 @@
  * Author URI:  https://metabox.io
  * Text Domain: meta-box-beaver-themer-integrator
  * Domain Path: /languages
- * Version:     1.4.1
+ * Version:     2.0.0
  *
  * @package    Meta Box
  * @subpackage Meta Box Beaver Themer Integrator

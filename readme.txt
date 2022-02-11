@@ -4,8 +4,8 @@ Donate link: https://metabox.io/pricing/
 Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
 Requires at least: 4.9
 Requires PHP: 5.6
-Tested up to: 5.8.2
-Stable tag: 1.4.1
+Tested up to: 5.9
+Stable tag: 2.0.0
 License: GPLv2 or later
 
 Integrates Meta Box's custom fields with Beaver Themer.
@@ -54,6 +54,10 @@ Install **Meta Box - Beaver Themer Integrator** extension
 3. Select a Meta Box field
 
 == Changelog ==
+
+= 2.0.0 - 2022-02-11 =
+- Breaking change: change the way to select color field. If you select a color field in a previous version, please re-select it.
+- Fix single_image field not showing in shortcode (insert mode)
 
 = 1.4.1 - 2021-11-13 =
 - Fix deprecated notice for conditional logic
