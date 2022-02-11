@@ -24,15 +24,9 @@ class Authors extends Base {
 				'multiple-photos',
 				'url',
 				'custom_field',
+				'color',
 			],
 			'getter' => [ $this, 'get_field_value' ],
-			'form'   => 'meta_box',
-		] );
-		FLPageData::$func( 'meta_box_color_post_author', [
-			'label'  => __( 'Meta Box Color Field', 'meta-box-beaver-themer-integrator' ),
-			'group'  => $this->group,
-			'type'   => ['color'],
-			'getter' => [ $this, 'get_color_field_value' ],
 			'form'   => 'meta_box',
 		] );
 
@@ -59,13 +53,6 @@ class Authors extends Base {
 			];
 		}
 		FLPageData::$func( 'meta_box_post_author', $fields );
-		FLPageData::$func( 'meta_box_color_post_author', [
-			'field' => [
-				'type'    => 'select',
-				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_color_fields(),
-			],
-		] );
 	}
 
 	public function is_active() {

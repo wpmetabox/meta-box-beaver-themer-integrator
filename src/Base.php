@@ -68,15 +68,9 @@ abstract class Base {
 				'multiple-photos',
 				'url',
 				'custom_field',
+				'color',
 			],
 			'getter' => [ $this, 'get_field_value' ],
-			'form'   => 'meta_box',
-		] );
-		FLPageData::$func( 'meta_box_color', [
-			'label'  => __( 'Meta Box Color Field', 'meta-box-beaver-themer-integrator' ),
-			'group'  => $this->group,
-			'type'   => ['color'],
-			'getter' => [ $this, 'get_color_field_value' ],
 			'form'   => 'meta_box',
 		] );
 
@@ -103,13 +97,6 @@ abstract class Base {
 			];
 		}
 		FLPageData::$func( 'meta_box', $fields );
-		FLPageData::$func( 'meta_box_color', [
-			'field' => [
-				'type'    => 'select',
-				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
-				'options' => $this->get_color_fields(),
-			],
-		] );
 	}
 
 	/**
@@ -136,6 +123,9 @@ abstract class Base {
 		$field = rwmb_get_field_settings( $field_id, $args, $object_id );
 
 		switch ( $field['type'] ) {
+			case 'color':
+				$value = rwmb_get_value( $field_id, $args, $object_id );
+				return str_replace( '#', '', $value );
 			case 'image':
 			case 'image_advanced':
 			case 'image_upload':
@@ -160,36 +150,8 @@ abstract class Base {
 		return $value;
 	}
 
-	/**
-	 * Display Meta Box field.
-	 *
-	 * @param object $settings Property settings.
-	 * @param string $property Property.
-	 *
-	 * @return mixed
-	 */
-	public function get_color_field_value( $settings, $property ) {
-		list( $object_id, $field_id ) = $this->parse_settings( $settings );
-
-		$args  = array( 'object_type' => $this->object_type );
-		$value = rwmb_get_value( $field_id, $args, $object_id );
-
-		return str_replace( '#', '', $value );
-	}
-
 	protected function get_fields() {
 		$list = $this->get_field_list();
-		return $this->format( $list );
-	}
-
-	protected function get_color_fields() {
-		$list = $this->get_field_list();
-
-		// Keep only color fields.
-		foreach ( $list as &$fields ) {
-			$fields = array_filter( $fields, array( $this, 'is_color' ) );
-		}
-
 		return $this->format( $list );
 	}
 
@@ -223,16 +185,6 @@ abstract class Base {
 	 */
 	private function has_value( $field ) {
 		return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
-	}
-
-	/**
-	 * Check if a field is a color field.
-	 *
-	 * @param  array $field Field settings.
-	 * @return bool
-	 */
-	private function is_color( $field ) {
-		return 'color' === $field['type'];
 	}
 
 	/**
