@@ -135,8 +135,7 @@ abstract class Base {
 			case 'single_image':
 				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args, $object_id );
-				$value['id']  = $value['ID'];
-				return $value;
+				return $value['url'];
 			case 'date':
 			case 'datetime':
 				if ( ! empty( $settings->date_format ) ) {
