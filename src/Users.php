@@ -29,7 +29,7 @@ class Users extends Base {
 			'form'   => 'meta_box',
 		] );
 		FLPageData::$func( 'meta_box_color_post_user', [
-			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'label'  => __( 'Meta Box Color Field', 'meta-box-beaver-themer-integrator' ),
 			'group'  => $this->group,
 			'type'   => ['color'],
 			'getter' => [ $this, 'get_color_field_value' ],
