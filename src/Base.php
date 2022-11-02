@@ -122,6 +122,10 @@ abstract class Base {
 		$args  = array( 'object_type' => $this->object_type );
 		$field = rwmb_get_field_settings( $field_id, $args, $object_id );
 
+		if ( ! $field ) {
+			return;
+		}
+
 		switch ( $field['type'] ) {
 			case 'color':
 				$value = rwmb_get_value( $field_id, $args, $object_id );
