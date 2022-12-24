@@ -2,10 +2,10 @@
 Contributors: metabox, rilwis
 Donate link: https://metabox.io/pricing/
 Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
-Requires at least: 4.9
-Requires PHP: 5.6
-Tested up to: 5.9
-Stable tag: 2.0.0
+Requires at least: 5.9
+Requires PHP: 7.0
+Tested up to: 6.1.1
+Stable tag: 2.0.1
 License: GPLv2 or later
 
 Integrates Meta Box's custom fields with Beaver Themer.
@@ -32,6 +32,13 @@ Please use [GitHub](https://github.com/wpmetabox/meta-box-beaver-themer-integrat
 - [Github repo](https://github.com/wpmetabox/meta-box-beaver-themer-integrator/)
 - [View other premium extensions](https://metabox.io/plugins/)
 
+### You might also like
+
+- [Slim SEO](https://wpslimseo.com): A fast, lightweight, full-featured SEO plugin with minimal configuration.
+- [Slim SEO Schema](https://wpslimseo.com/slim-seo-schema/): The best schema plugin for WordPress.
+- [Auto Listings](https://wpautolistings.com): The best WordPress plugin for car dealership and car selling websites.
+- [GretaThemes](https://gretathemes.com): Clean and elegant WordPress themes (free and premium).
+
 == Installation ==
 
 You need to install [Meta Box](https://metabox.io) plugin first
@@ -54,6 +61,9 @@ Install **Meta Box - Beaver Themer Integrator** extension
 3. Select a Meta Box field
 
 == Changelog ==
+
+= 2.0.1 - 2022-22-24 =
+- Fix access array offset on value
 
 = 2.0.0 - 2022-02-11 =
 - Breaking change: change the way to select color field. If you select a color field in a previous version, please re-select it.
