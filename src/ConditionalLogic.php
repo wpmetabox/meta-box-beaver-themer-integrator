@@ -83,7 +83,7 @@ class ConditionalLogic {
 				$title = $settings_page['page_title'];
 			}
 			return [
-				'value' => $settings_page['option_name'],
+				'value' => $settings_page['option_name'] ?? '',
 				'label' => $title,
 			];
 		}, $settings_pages );

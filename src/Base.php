@@ -46,7 +46,7 @@ abstract class Base {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'fl_page_data_add_properties', array( $this, 'add_properties' ) );
+		add_action( 'fl_page_data_add_properties', [ $this, 'add_properties' ] );
 	}
 
 	/**
@@ -74,14 +74,14 @@ abstract class Base {
 			'form'   => 'meta_box',
 		] );
 
-		$func = "add_{$this->type}_property_settings_fields";
+		$func   = "add_{$this->type}_property_settings_fields";
 		$fields = [
 			'field' => [
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
 				'options' => $this->get_fields(),
 				'toggle'  => $this->get_toggle_rules(),
-			]
+			],
 		];
 		if ( $this->has_image_field() ) {
 			$fields['image_size'] = [
@@ -119,7 +119,7 @@ abstract class Base {
 	public function get_field_value( $settings, $property ) {
 		list( $object_id, $field_id ) = $this->parse_settings( $settings );
 
-		$args  = array( 'object_type' => $this->object_type );
+		$args  = [ 'object_type' => $this->object_type ];
 		$field = rwmb_get_field_settings( $field_id, $args, $object_id );
 
 		if ( ! $field ) {
@@ -139,7 +139,10 @@ abstract class Base {
 			case 'single_image':
 				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args, $object_id );
-				return $value['url'];
+				return [
+					'id'  => $value['ID'] ?? '',
+					'url' => $value['url'] ?? '',
+				];
 			case 'date':
 			case 'datetime':
 				if ( ! empty( $settings->date_format ) ) {
@@ -172,7 +175,7 @@ abstract class Base {
 
 		// Keep fields that have value only.
 		foreach ( $list as &$fields ) {
-			$fields = array_filter( $fields, array( $this, 'has_value' ) );
+			$fields = array_filter( $fields, [ $this, 'has_value' ] );
 		}
 
 		$this->field_list = $list;
@@ -187,7 +190,7 @@ abstract class Base {
 	 * @return bool
 	 */
 	private function has_value( $field ) {
-		return ! in_array( $field['type'], array( 'heading', 'divider', 'custom_html', 'button' ), true );
+		return ! in_array( $field['type'], [ 'heading', 'divider', 'custom_html', 'button' ], true );
 	}
 
 	/**
@@ -198,17 +201,17 @@ abstract class Base {
 	 */
 	protected function get_toggle_rules() {
 		$list      = $this->get_field_list();
-		$field_map = array();
+		$field_map = [];
 		foreach ( $list as $object => $fields ) {
 			foreach ( $fields as $field ) {
-				$key = 'setting' === $this->object_type ? "{$object}#{$field['id']}" : $field['id'];
+				$key               = 'setting' === $this->object_type ? "{$object}#{$field['id']}" : $field['id'];
 				$field_map[ $key ] = $field['type'];
 			}
 		}
 
-		$rules       = array();
-		$image_rules = array( 'fields' => array( 'image_size' ) );
-		$date_rules  = array( 'fields' => array( 'date_format' ) );
+		$rules       = [];
+		$image_rules = [ 'fields' => [ 'image_size' ] ];
+		$date_rules  = [ 'fields' => [ 'date_format' ] ];
 		foreach ( $field_map as $id => $type ) {
 			switch ( $type ) {
 				case 'image':
@@ -233,8 +236,8 @@ abstract class Base {
 	 * @return bool
 	 */
 	protected function has_image_field() {
-		$types = array( 'image', 'image_advanced', 'image_upload', 'plupload_image', 'single_image' );
-		$list = $this->get_field_list();
+		$types = [ 'image', 'image_advanced', 'image_upload', 'plupload_image', 'single_image' ];
+		$list  = $this->get_field_list();
 		foreach ( $list as $type => $fields ) {
 			foreach ( $fields as $field ) {
 				if ( in_array( $field['type'], $types, true ) ) {
@@ -251,8 +254,8 @@ abstract class Base {
 	 * @return bool
 	 */
 	protected function has_date_field() {
-		$types = array( 'date', 'datetime' );
-		$list = $this->get_field_list();
+		$types = [ 'date', 'datetime' ];
+		$list  = $this->get_field_list();
 		foreach ( $list as $type => $fields ) {
 			foreach ( $fields as $field ) {
 				if ( in_array( $field['type'], $types, true ) ) {
