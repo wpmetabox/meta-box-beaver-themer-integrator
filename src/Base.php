@@ -179,9 +179,6 @@ abstract class Base {
 		}
 
 		switch ( $field['type'] ) {
-			case 'color':
-				$value = rwmb_get_value( $field_id, $args, $object_id );
-				return str_replace( '#', '', $value );
 			case 'image':
 			case 'image_advanced':
 			case 'image_upload':
@@ -191,13 +188,7 @@ abstract class Base {
 			case 'single_image':
 				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args, $object_id );
-				return [ $value['ID'] ?? '' ];
-			case 'date':
-			case 'datetime':
-				if ( ! empty( $settings->date_format ) ) {
-					$args['format'] = $settings->date_format;
-				}
-				break;
+				return empty( $value['ID'] ) ? [] : [ $value['ID'] ];
 		}
 
 		$value = rwmb_the_value( $field_id, $args, $object_id, false );
