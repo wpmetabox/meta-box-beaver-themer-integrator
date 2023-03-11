@@ -65,12 +65,19 @@ abstract class Base {
 				'string',
 				'html',
 				'photo',
-				'multiple-photos',
 				'url',
 				'custom_field',
 				'color',
 			],
 			'getter' => [ $this, 'get_field_value' ],
+			'form'   => 'meta_box',
+		] );
+
+		FLPageData::$func( 'meta_box_gallery', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => 'multiple-photos',
+			'getter' => [ $this, 'get_multiple_photos_value' ],
 			'form'   => 'meta_box',
 		] );
 
@@ -97,6 +104,7 @@ abstract class Base {
 			];
 		}
 		FLPageData::$func( 'meta_box', $fields );
+		FLPageData::$func( 'meta_box_gallery', $fields );
 	}
 
 	/**
@@ -135,7 +143,11 @@ abstract class Base {
 			case 'image_upload':
 			case 'plupload_image':
 				$value = rwmb_get_value( $field_id, $args, $object_id );
-				return array_keys( $value );
+				$id    = array_key_first( $value );
+				return [
+					'id'  => $id,
+					'url' => $value[ $id ]['url'] ?? '',
+				];
 			case 'single_image':
 				$args['size'] = $settings->image_size;
 				$value        = rwmb_get_value( $field_id, $args, $object_id );
@@ -143,6 +155,43 @@ abstract class Base {
 					'id'  => $value['ID'] ?? '',
 					'url' => $value['url'] ?? '',
 				];
+			case 'date':
+			case 'datetime':
+				if ( ! empty( $settings->date_format ) ) {
+					$args['format'] = $settings->date_format;
+				}
+				break;
+		}
+
+		$value = rwmb_the_value( $field_id, $args, $object_id, false );
+
+		return $value;
+	}
+
+	public function get_multiple_photos_value( $settings, $property ) {
+		list( $object_id, $field_id ) = $this->parse_settings( $settings );
+
+		$args  = [ 'object_type' => $this->object_type ];
+		$field = rwmb_get_field_settings( $field_id, $args, $object_id );
+
+		if ( ! $field ) {
+			return;
+		}
+
+		switch ( $field['type'] ) {
+			case 'color':
+				$value = rwmb_get_value( $field_id, $args, $object_id );
+				return str_replace( '#', '', $value );
+			case 'image':
+			case 'image_advanced':
+			case 'image_upload':
+			case 'plupload_image':
+				$value = rwmb_get_value( $field_id, $args, $object_id );
+				return array_keys( $value );
+			case 'single_image':
+				$args['size'] = $settings->image_size;
+				$value        = rwmb_get_value( $field_id, $args, $object_id );
+				return [ $value['ID'] ?? '' ];
 			case 'date':
 			case 'datetime':
 				if ( ! empty( $settings->date_format ) ) {
