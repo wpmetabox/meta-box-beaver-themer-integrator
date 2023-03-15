@@ -64,12 +64,19 @@ abstract class Base {
 			'type'   => [
 				'string',
 				'html',
-				'photo',
 				'url',
 				'custom_field',
 				'color',
 			],
 			'getter' => [ $this, 'get_field_value' ],
+			'form'   => 'meta_box',
+		] );
+
+		FLPageData::$func( 'meta_box_photo', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => 'photo',
+			'getter' => [ $this, 'get_photo_value' ],
 			'form'   => 'meta_box',
 		] );
 
@@ -95,6 +102,10 @@ abstract class Base {
 				'type'  => 'photo-sizes',
 				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
 			];
+			$fields['display']    = [
+				'type'    => 'hidden',
+				'default' => 'url',
+			];
 		}
 		if ( $this->has_date_field() ) {
 			$fields['date_format'] = [
@@ -104,6 +115,7 @@ abstract class Base {
 			];
 		}
 		FLPageData::$func( 'meta_box', $fields );
+		FLPageData::$func( 'meta_box_photo', $fields );
 		FLPageData::$func( 'meta_box_gallery', $fields );
 	}
 
@@ -142,6 +154,58 @@ abstract class Base {
 			case 'image_advanced':
 			case 'image_upload':
 			case 'plupload_image':
+				return rwmb_the_value( $field_id, $args, $object_id );
+			case 'single_image':
+				$args['size'] = $settings->image_size;
+				$value        = rwmb_get_value( $field_id, $args, $object_id );
+				$display      = $settings->display;
+				if ( $display === 'tag' ) {
+					return wp_get_attachment_image( $value['ID'], $settings->image_size );
+				}
+				if ( $display === 'url' ) {
+					return $value['url'] ?? '';
+				}
+				if ( $display === 'title' ) {
+					return $value['title'] ?? '';
+				}
+				if ( $display === 'caption' ) {
+					return $value['caption'] ?? '';
+				}
+				if ( $display === 'description' ) {
+					return $value['title'] ?? '';
+				}
+				if ( $display === 'alt' ) {
+					return $value['alt'] ?? '';
+				}
+
+			case 'date':
+			case 'datetime':
+				if ( ! empty( $settings->date_format ) ) {
+					$args['format'] = $settings->date_format;
+				}
+				break;
+		}
+
+		$value = rwmb_the_value( $field_id, $args, $object_id, false );
+
+		return $value;
+	}
+
+	public function get_photo_value( $settings, $property ) {
+		list( $object_id, $field_id ) = $this->parse_settings( $settings );
+
+		$args  = [ 'object_type' => $this->object_type ];
+		$field = rwmb_get_field_settings( $field_id, $args, $object_id );
+
+		if ( ! $field ) {
+			return;
+		}
+
+		switch ( $field['type'] ) {
+			case 'image':
+			case 'image_advanced':
+			case 'image_upload':
+			case 'plupload_image':
 				$value = rwmb_get_value( $field_id, $args, $object_id );
 				$id    = array_key_first( $value );
 				return [
@@ -155,12 +219,6 @@ abstract class Base {
 					'id'  => $value['ID'] ?? '',
 					'url' => $value['url'] ?? '',
 				];
-			case 'date':
-			case 'datetime':
-				if ( ! empty( $settings->date_format ) ) {
-					$args['format'] = $settings->date_format;
-				}
-				break;
 		}
 
 		$value = rwmb_the_value( $field_id, $args, $object_id, false );
@@ -250,7 +308,7 @@ abstract class Base {
 		}
 
 		$rules       = [];
-		$image_rules = [ 'fields' => [ 'image_size' ] ];
+		$image_rules = [ 'fields' => [ 'image_size', 'display' ] ];
 		$date_rules  = [ 'fields' => [ 'date_format' ] ];
 		foreach ( $field_map as $id => $type ) {
 			switch ( $type ) {
