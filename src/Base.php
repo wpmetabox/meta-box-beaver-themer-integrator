@@ -114,6 +114,19 @@ abstract class Base {
 				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
 			];
 		}
+		if ( $this->has_taxonomy_field() ) {
+			$fields['display_term'] = [
+				'type'    => 'select',
+				'label'   => __( 'Field Type', 'meta-box-beaver-themer-integrator' ),
+				'default' => 'tag',
+				'options' => [
+					'ID'   => __( 'ID', 'meta-box-beaver-themer-integrator' ),
+					'name' => __( 'Name', 'meta-box-beaver-themer-integrator' ),
+					'url'  => __( 'URL', 'meta-box-beaver-themer-integrator' ),
+					'tag'  => __( 'Tag', 'meta-box-beaver-themer-integrator' ),
+				],
+			];
+		}
 		FLPageData::$func( 'meta_box', $fields );
 		FLPageData::$func( 'meta_box_photo', $fields );
 		FLPageData::$func( 'meta_box_gallery', $fields );
@@ -162,9 +175,6 @@ abstract class Base {
 				if ( $display === 'tag' ) {
 					return wp_get_attachment_image( $value['ID'], $settings->image_size );
 				}
-				if ( $display === 'url' ) {
-					return $value['url'] ?? '';
-				}
 				if ( $display === 'title' ) {
 					return $value['title'] ?? '';
 				}
@@ -172,11 +182,12 @@ abstract class Base {
 					return $value['caption'] ?? '';
 				}
 				if ( $display === 'description' ) {
-					return $value['title'] ?? '';
+					return $value['description'] ?? '';
 				}
 				if ( $display === 'alt' ) {
 					return $value['alt'] ?? '';
 				}
+				return $value['url'] ?? '';
 
 			case 'date':
 			case 'datetime':
@@ -184,6 +195,40 @@ abstract class Base {
 					$args['format'] = $settings->date_format;
 				}
 				break;
+			case 'taxonomy':
+			case 'taxonomy_advanced':
+				$display = $settings->display_term;
+				$terms   = rwmb_meta( $field_id, $args, $object_id );
+				if ( empty( $terms ) ) {
+					return '';
+				}
+				if ( is_array( $terms ) && $display === 'ID' ) {
+					$content = '<ul>';
+					foreach ( $terms as $term ) {
+						$content .= "<li>{$term->term_id}</li>";
+					}
+					$content .= '</ul>';
+					return $content;
+				}
+				if ( ! is_array( $terms ) && $display === 'ID' ) {
+					return $terms->term_id;
+				}
+				if ( is_array( $terms ) && $display === 'url' ) {
+					$content = '<ul>';
+					foreach ( $terms as $term ) {
+						$content .= '<li>' . get_term_link( $term ) . '</li>';
+					}
+					$content .= '</ul>';
+					return $content;
+				}
+				if ( ! is_array( $terms ) && $display === 'url' ) {
+					return get_term_link( $terms );
+				}
+				if ( $display === 'name' ) {
+					$args['link'] = false;
+				}
+				break;
+
 		}
 
 		$value = rwmb_the_value( $field_id, $args, $object_id, false );
@@ -307,9 +352,10 @@ abstract class Base {
 			}
 		}
 
-		$rules       = [];
-		$image_rules = [ 'fields' => [ 'image_size', 'display' ] ];
-		$date_rules  = [ 'fields' => [ 'date_format' ] ];
+		$rules          = [];
+		$image_rules    = [ 'fields' => [ 'image_size', 'display' ] ];
+		$date_rules     = [ 'fields' => [ 'date_format' ] ];
+		$taxonomy_rules = [ 'fields' => [ 'display_term' ] ];
 		foreach ( $field_map as $id => $type ) {
 			switch ( $type ) {
 				case 'image':
@@ -322,6 +368,10 @@ abstract class Base {
 				case 'date':
 				case 'datetime':
 					$rules[ $id ] = $date_rules;
+					break;
+				case 'taxonomy':
+				case 'taxonomy_advanced':
+					$rules[ $id ] = $taxonomy_rules;
 					break;
 			}
 		}
@@ -353,6 +403,19 @@ abstract class Base {
 	 */
 	protected function has_date_field() {
 		$types = [ 'date', 'datetime' ];
+		$list  = $this->get_field_list();
+		foreach ( $list as $type => $fields ) {
+			foreach ( $fields as $field ) {
+				if ( in_array( $field['type'], $types, true ) ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	protected function has_taxonomy_field() {
+		$types = [ 'taxonomy', 'taxonomy_advanced' ];
 		$list  = $this->get_field_list();
 		foreach ( $list as $type => $fields ) {
 			foreach ( $fields as $field ) {
