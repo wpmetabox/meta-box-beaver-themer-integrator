@@ -228,6 +228,8 @@ abstract class Base {
 					$args['link'] = false;
 				}
 				break;
+			case 'checkbox':
+				return rwmb_meta( $field_id, $args, $object_id );
 
 		}
 
