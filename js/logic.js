@@ -42,12 +42,13 @@
 						'equals',
 						'does_not_equal',
 						'is_set',
+						'is_not_set',
 					],
 				},
 				compare: {
 					type: 'text',
 					placeholder: 'Value',
-					visible: 'is_set' !== operator,
+					visible: 'is_set' !== operator && 'is_not_set' !== operator,
 				},
 			}
 		}
