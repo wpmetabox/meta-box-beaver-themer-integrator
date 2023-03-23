@@ -5,7 +5,7 @@ Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, c
 Requires at least: 5.9
 Requires PHP: 7.0
 Tested up to: 6.1.1
-Stable tag: 2.0.1
+Stable tag: 2.1.0
 License: GPLv2 or later
 
 Integrates Meta Box's custom fields with Beaver Themer.
@@ -61,6 +61,14 @@ Install **Meta Box - Beaver Themer Integrator** extension
 3. Select a Meta Box field
 
 == Changelog ==
+
+= 2.1.0 - 2023-03-23 =
+- Add support for condition "Is Not Set"
+- Add support for conditional shortcodes
+- Add support for shortcode attributes for taxonomies
+- Support showing image fields with BB shortcode
+- Make all image fields work with photo and gallery modules (#3)
+- Fix single image alt text and PHP warning "trying to access array"
 
 = 2.0.1 - 2022-22-24 =
 - Fix access array offset on value
