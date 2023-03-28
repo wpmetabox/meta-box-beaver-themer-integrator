@@ -4,8 +4,8 @@ namespace MBBTI;
 use FLPageData;
 
 class Authors extends Base {
-	protected $group = 'author';
-	protected $type = 'post';
+	protected $group       = 'author';
+	protected $type        = 'post';
 	protected $object_type = 'user';
 
 	public function add_properties() {
@@ -30,14 +30,14 @@ class Authors extends Base {
 			'form'   => 'meta_box',
 		] );
 
-		$func = "add_{$this->type}_property_settings_fields";
+		$func   = "add_{$this->type}_property_settings_fields";
 		$fields = [
 			'field' => [
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
 				'options' => $this->get_fields(),
 				'toggle'  => $this->get_toggle_rules(),
-			]
+			],
 		];
 		if ( $this->has_image_field() ) {
 			$fields['image_size'] = [
@@ -66,8 +66,8 @@ class Authors extends Base {
 	 * @return array            Field ID and object ID.
 	 */
 	public function parse_settings( $settings ) {
-		$post = get_post();
-		return [ $post->post_author, $settings->field ];
+		$author_id = get_post_field( 'post_author', get_the_ID() ) ?: get_the_author_meta( 'ID' );
+		return [ $author_id, $settings->field ];
 	}
 
 	public function format( $list ) {
