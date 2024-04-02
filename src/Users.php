@@ -20,8 +20,6 @@ class Users extends Base {
 			'type'   => [
 				'string',
 				'html',
-				'photo',
-				'multiple-photos',
 				'url',
 				'custom_field',
 				'color',
@@ -30,19 +28,39 @@ class Users extends Base {
 			'form'   => 'meta_box',
 		] );
 
-		$func = "add_{$this->type}_property_settings_fields";
+		FLPageData::$func( 'meta_box_photo_post_user', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => 'photo',
+			'getter' => [ $this, 'get_photo_value' ],
+			'form'   => 'meta_box',
+		] );
+
+		FLPageData::$func( 'meta_box_gallery_post_user', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => 'multiple-photos',
+			'getter' => [ $this, 'get_multiple_photos_value' ],
+			'form'   => 'meta_box',
+		] );
+
+		$func   = "add_{$this->type}_property_settings_fields";
 		$fields = [
 			'field' => [
 				'type'    => 'select',
 				'label'   => __( 'Field Name', 'meta-box-beaver-themer-integrator' ),
 				'options' => $this->get_fields(),
 				'toggle'  => $this->get_toggle_rules(),
-			]
+			],
 		];
 		if ( $this->has_image_field() ) {
 			$fields['image_size'] = [
 				'type'  => 'photo-sizes',
 				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
+			];
+			$fields['display']    = [
+				'type'    => 'hidden',
+				'default' => 'url',
 			];
 		}
 		if ( $this->has_date_field() ) {
@@ -50,6 +68,19 @@ class Users extends Base {
 				'type'        => 'text',
 				'label'       => __( 'Date Format', 'meta-box-beaver-themer-integrator' ),
 				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
+			];
+		}
+		if ( $this->has_taxonomy_field() ) {
+			$fields['display_term'] = [
+				'type'    => 'select',
+				'label'   => __( 'Field Type', 'meta-box-beaver-themer-integrator' ),
+				'default' => 'tag',
+				'options' => [
+					'ID'   => __( 'ID', 'meta-box-beaver-themer-integrator' ),
+					'name' => __( 'Name', 'meta-box-beaver-themer-integrator' ),
+					'url'  => __( 'URL', 'meta-box-beaver-themer-integrator' ),
+					'tag'  => __( 'Tag', 'meta-box-beaver-themer-integrator' ),
+				],
 			];
 		}
 		$fields['user'] = [
@@ -68,6 +99,8 @@ class Users extends Base {
 			'label' => __( 'User ID', 'meta-box-beaver-themer-integrator' ),
 		];
 		FLPageData::$func( 'meta_box_post_user', $fields );
+		FLPageData::$func( 'meta_box_photo_post_user', $fields );
+		FLPageData::$func( 'meta_box_gallery_post_user', $fields );
 	}
 
 	public function is_active() {

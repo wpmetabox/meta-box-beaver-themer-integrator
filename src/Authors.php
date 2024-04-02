@@ -20,13 +20,27 @@ class Authors extends Base {
 			'type'   => [
 				'string',
 				'html',
-				'photo',
-				'multiple-photos',
 				'url',
 				'custom_field',
 				'color',
 			],
 			'getter' => [ $this, 'get_field_value' ],
+			'form'   => 'meta_box',
+		] );
+
+		FLPageData::$func( 'meta_box_photo_post_author', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => 'photo',
+			'getter' => [ $this, 'get_photo_value' ],
+			'form'   => 'meta_box',
+		] );
+
+		FLPageData::$func( 'meta_box_gallery_post_author', [
+			'label'  => __( 'Meta Box Field', 'meta-box-beaver-themer-integrator' ),
+			'group'  => $this->group,
+			'type'   => 'multiple-photos',
+			'getter' => [ $this, 'get_multiple_photos_value' ],
 			'form'   => 'meta_box',
 		] );
 
@@ -44,6 +58,10 @@ class Authors extends Base {
 				'type'  => 'photo-sizes',
 				'label' => __( 'Image Size', 'meta-box-beaver-themer-integrator' ),
 			];
+			$fields['display']    = [
+				'type'    => 'hidden',
+				'default' => 'url',
+			];
 		}
 		if ( $this->has_date_field() ) {
 			$fields['date_format'] = [
@@ -52,7 +70,22 @@ class Authors extends Base {
 				'description' => __( 'Enter a <a href="http://php.net/date">PHP date format string</a>. Leave empty to use the default field format.', 'meta-box-beaver-themer-integrator' ),
 			];
 		}
+		if ( $this->has_taxonomy_field() ) {
+			$fields['display_term'] = [
+				'type'    => 'select',
+				'label'   => __( 'Field Type', 'meta-box-beaver-themer-integrator' ),
+				'default' => 'tag',
+				'options' => [
+					'ID'   => __( 'ID', 'meta-box-beaver-themer-integrator' ),
+					'name' => __( 'Name', 'meta-box-beaver-themer-integrator' ),
+					'url'  => __( 'URL', 'meta-box-beaver-themer-integrator' ),
+					'tag'  => __( 'Tag', 'meta-box-beaver-themer-integrator' ),
+				],
+			];
+		}
 		FLPageData::$func( 'meta_box_post_author', $fields );
+		FLPageData::$func( 'meta_box_photo_post_author', $fields );
+		FLPageData::$func( 'meta_box_gallery_post_author', $fields );
 	}
 
 	public function is_active() {
