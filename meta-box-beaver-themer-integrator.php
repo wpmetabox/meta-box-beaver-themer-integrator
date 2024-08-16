@@ -14,7 +14,10 @@
  * @subpackage Meta Box Beaver Themer Integrator
  */
 
-defined( 'ABSPATH' ) || die;
+// Prevent loading this file directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
 if ( file_exists( __DIR__ . '/vendor' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
