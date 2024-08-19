@@ -4,8 +4,8 @@ Donate link: https://metabox.io/pricing/
 Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
 Requires at least: 5.9
 Requires PHP: 7.0
-Tested up to: 6.5
-Stable tag: 2.1.2
+Tested up to: 6.6.1
+Stable tag: 2.1.3
 License: GPLv2 or later
 
 Integrates Meta Box's custom fields with Beaver Themer.
@@ -61,6 +61,9 @@ Install **Meta Box - Beaver Themer Integrator** extension
 3. Select a Meta Box field
 
 == Changelog ==
+
+2.1.3 - 2024-08-19 =
+- Fix running PHP Codesniffer when installing & autoload the plugin's main file via Composer
 
 = 2.1.2 - 2024-04-02 =
 - Fix image fields not working for author and user
