@@ -6,7 +6,7 @@
  * Author:           MetaBox.io
  * Author URI:       https://metabox.io
  * Text Domain:      meta-box-beaver-themer-integrator
- * Version:          2.1.3
+ * Version:          2.1.4
  * Requires Plugins: meta-box
  * License:          GPL-2.0
  */
