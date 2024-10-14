@@ -1,4 +1,4 @@
-=== Meta Box - Beaver Themer Integrator ===
+=== MB Beaver Builder Integration ===
 Contributors: metabox, rilwis
 Donate link: https://metabox.io/pricing/
 Tags: meta box, custom fields, beaver builder
@@ -47,9 +47,9 @@ You need to install [Meta Box](https://metabox.io) plugin first
 - Click **Install Now** button to install the plugin
 - After installing, click **Activate Plugin** to activate the plugin
 
-Install **Meta Box - Beaver Themer Integrator** extension
+Install **MB Beaver Builder Integration** extension
 
-- Go to **Plugins | Add New** and search for **Meta Box - Beaver Themer Integrator**
+- Go to **Plugins | Add New** and search for **MB Beaver Builder Integration**
 - Click **Install Now** button to install the plugin
 - After installing, click **Activate Plugin** to activate the plugin
 

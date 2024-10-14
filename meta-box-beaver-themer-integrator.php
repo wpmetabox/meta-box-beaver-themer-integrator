@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:      Meta Box - Beaver Themer Integrator
+ * Plugin Name:      MB Beaver Builder Integration
  * Plugin URI:       https://metabox.io/plugins/meta-box-beaver-themer-integrator/
- * Description:      Integrates Meta Box and Beaver Themer.
+ * Description:      Integrates Meta Box and Beaver Builder.
  * Author:           MetaBox.io
  * Author URI:       https://metabox.io
  * Text Domain:      meta-box-beaver-themer-integrator
