@@ -6,12 +6,9 @@
  * Author:           MetaBox.io
  * Author URI:       https://metabox.io
  * Text Domain:      meta-box-beaver-themer-integrator
- * Domain Path:      /languages
  * Version:          2.1.3
  * Requires Plugins: meta-box
- *
- * @package    Meta Box
- * @subpackage Meta Box Beaver Themer Integrator
+ * License:          GPL-2.0
  */
 
 // Prevent loading this file directly.

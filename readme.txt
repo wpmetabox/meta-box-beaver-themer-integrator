@@ -1,7 +1,7 @@
 === Meta Box - Beaver Themer Integrator ===
 Contributors: metabox, rilwis
 Donate link: https://metabox.io/pricing/
-Tags: meta box, custom meta box, meta boxes, custom meta boxes, custom fields, custom field, beaver themer, beaver builder
+Tags: meta box, custom fields, beaver builder
 Requires at least: 5.9
 Requires PHP: 7.0
 Tested up to: 6.6.1
