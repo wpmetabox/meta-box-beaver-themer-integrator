@@ -14,6 +14,9 @@ Integrates Meta Box's custom fields with Beaver Themer.
 
 Easily select and show custom fields created by the [Meta Box](https://metabox.io) plugin in the [Beaver Themer](https://www.wpbeaverbuilder.com/beaver-themer/) field connection from a dropdown.
 
+> **Meta Box Lite**
+> We recommend using [Meta Box Lite](https://metabox.io/lite/), a feature-rich free UI version of Meta Box that provides UI and all free features for managing custom fields and dynamic content on WordPress, including post types, taxonomies, custom fields, and relationships.
+
 The plugin works for all field types. And you don't have to remember the field name or field ID to type. You just need to select it from the dropdown list.
 
 See it in action in the following video:
